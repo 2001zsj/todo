@@ -421,9 +421,10 @@
 
   .todo-time {
     display: block;
-    font-size: 0.68rem;
-    color: #c0a8d0;
-    margin-top: 2px;
+    font-size: 0.7rem;
+    color: #9b7ea8;
+    margin-top: 3px;
+    font-weight: 500;
   }
 
   /* edit input */
@@ -903,11 +904,19 @@
       const r = localStorage.getItem(KEY);
       if (!r) return [];
       const data = JSON.parse(r);
-      // 过滤掉损坏的数据：必须有 id、text 不为空、done 是布尔值
-      return Array.isArray(data)
-        ? data.filter(t => t && typeof t.id === 'string' && t.text && t.text.trim() && typeof t.done === 'boolean')
-        : [];
+      if (!Array.isArray(data)) return [];
+      return data.filter(t => t && typeof t.id === 'string' && t.text && t.text.trim() && typeof t.done === 'boolean');
     } catch(e) { return []; }
+  }
+
+  /* 老数据迁移：给没有时间戳的已完成任务补上时间 */
+  function migrate() {
+    let changed = false;
+    const now = new Date().toISOString();
+    todos.forEach(t => {
+      if (t.done && !t.completedAt) { t.completedAt = now; changed = true; }
+    });
+    if (changed) save();
   }
 
   /* ─── Filters ─── */
@@ -919,17 +928,11 @@
 
   /* ─── Time formatting ─── */
   function formatTime(isoStr) {
-    const now = Date.now();
-    const then = new Date(isoStr).getTime();
-    const diff = Math.max(0, Math.floor((now - then) / 1000)); // 秒
-
-    if (diff < 60) return '刚刚完成';
-    if (diff < 3600) return Math.floor(diff / 60) + ' 分钟前';
-    if (diff < 86400) return Math.floor(diff / 3600) + ' 小时前';
-    if (diff < 604800) return Math.floor(diff / 86400) + ' 天前';
-
+    if (!isoStr) return ''; // 无时间戳不显示
     const d = new Date(isoStr);
-    return `${d.getMonth() + 1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    if (isNaN(d.getTime())) return ''; // 无效日期不显示
+    // 完整年月日 + 时分秒
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
   }
 
   /* ─── Toast ─── */
@@ -1296,6 +1299,7 @@
 
   /* ─── Init ─── */
   todos = load();
+  migrate(); // 给老数据补上完成时间
   render();
   input.focus();
 })();
