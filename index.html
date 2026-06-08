@@ -386,14 +386,14 @@
     padding: 4px 12px;
     border-radius: 20px;
     font-weight: 600;
-    color: #c471ed;
+    color: var(--purple);
     font-size: 0.73rem;
   }
 
   .stats-bar button {
     background: none;
-    border: 1px solid #ffccd8;
-    color: #ff6b9d;
+    border: 1px solid var(--clear-btn-border);
+    color: var(--clear-btn-color);
     cursor: pointer;
     font-size: 0.73rem;
     padding: 5px 12px;
@@ -509,7 +509,7 @@
 
   .todo-item.completed .todo-text {
     text-decoration: line-through;
-    color: #c9a0c9;
+    color: var(--completed-text);
   }
 
   .todo-time {
@@ -610,7 +610,7 @@
   .footer .heart {
     display: inline-block;
     animation: heartBeat 1.2s ease-in-out infinite;
-    color: #ff6b9d;
+    color: var(--pink);
   }
 
   @keyframes heartBeat {
@@ -715,7 +715,7 @@
     font-size: 0.78rem;
     line-height: 1.4;
   }
-  .install-banner .banner-text strong { color: #ffb8d0; }
+  .install-banner .banner-text strong { color: var(--pink-light); }
 
   .install-banner .banner-btn {
     padding: 8px 14px;
@@ -816,10 +816,6 @@
 
   body.theme-starry .checkbox { border-color: var(--checkbox-border); }
 
-  body.theme-starry .stats-bar button { border-color: var(--clear-btn-border); color: var(--clear-btn-color); }
-
-  body.theme-starry .todo-item.completed .todo-text { color: var(--completed-text); }
-
   body.theme-starry .petal { background: var(--petal-bg); }
 
   body.theme-starry .sparkle { filter: hue-rotate(40deg) saturate(0.8); }
@@ -831,8 +827,6 @@
   body.theme-starry .filters button:hover::after { background: linear-gradient(90deg, #818cf8, #a78bfa); }
 
   body.theme-starry .todo-item:hover { border-color: #d4c8f0; box-shadow: 0 8px 28px rgba(100,90,160,0.18); }
-
-  body.theme-starry .clear-done { border-color: var(--clear-btn-border); color: var(--clear-btn-color); }
 
   /* --- 森林物语 --- */
   body.theme-forest .filters button.active { background: var(--grad-filter); color: #fff; }
@@ -848,10 +842,6 @@
   body.theme-forest .chibi-bar { background: var(--chibi-bar-bg); }
 
   body.theme-forest .checkbox { border-color: var(--checkbox-border); }
-
-  body.theme-forest .stats-bar button { border-color: var(--clear-btn-border); color: var(--clear-btn-color); }
-
-  body.theme-forest .todo-item.completed .todo-text { color: var(--completed-text); }
 
   body.theme-forest .petal { background: var(--petal-bg); }
 
@@ -881,7 +871,6 @@
   body.theme-dark .input-row button { box-shadow: 0 3px 12px rgba(139,92,246,0.3); }
   body.theme-dark .filters button:hover::after { background: linear-gradient(90deg, #f59e0b, #8b5cf6); }
   body.theme-dark .todo-item:hover { border-color: #475569; box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
-  body.theme-dark .clear-done { border-color: var(--clear-btn-border); color: var(--clear-btn-color); }
   body.theme-dark .checkmark { border-color: #475569; }
   body.theme-dark .theme-switch { background: rgba(30,41,59,0.92); border-color: #334155; }
   body.theme-dark .theme-switch button { color: #94a3b8; }
