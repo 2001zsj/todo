@@ -226,7 +226,8 @@
   .app {
     width: 100%;
     max-width: 460px;
-    padding: 60px 16px calc(20px + var(--safe-bottom));
+    padding: 50px 16px 80px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     position: relative;
     z-index: 2;
     flex: 1;
@@ -237,11 +238,11 @@
   /* ── Header ── */
   .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .header .mascot {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     display: block;
     animation: mascotBounce 2s ease-in-out infinite;
     line-height: 1;
@@ -249,13 +250,13 @@
 
   @keyframes mascotBounce {
     0%, 100% { transform: translateY(0) scale(1); }
-    30%      { transform: translateY(-10px) scale(1.08); }
+    30%      { transform: translateY(-8px) scale(1.06); }
     50%      { transform: translateY(0) scale(1); }
-    70%      { transform: translateY(-5px) scale(1.04); }
+    70%      { transform: translateY(-4px) scale(1.03); }
   }
 
   .header h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 800;
     background: var(--grad-title);
     background-size: 200% 200%;
@@ -286,15 +287,15 @@
   .input-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .input-row input {
     flex: 1;
-    padding: 13px 14px;
+    padding: 14px 16px;
     border: 2px solid var(--border);
     border-radius: var(--radius);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     background: var(--card);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -302,6 +303,7 @@
     outline: none;
     transition: 0.2s ease;
     min-width: 0;
+    height: 48px;
   }
 
   .input-row input:focus {
@@ -312,12 +314,13 @@
   .input-row input::placeholder { color: #ccb8d8; }
 
   .input-row button {
-    padding: 13px 18px;
+    padding: 0 20px;
+    height: 48px;
     background: var(--grad-btn);
     color: #fff;
     border: none;
     border-radius: var(--radius);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 700;
     cursor: pointer;
     transition: 0.2s ease;
@@ -348,9 +351,9 @@
 
   .filters button {
     flex: 1;
-    padding: 10px 6px;
+    height: 40px; padding: 0 4px;
     border: none;
-    border-radius: 12px;
+    border-radius: 13px;
     background: transparent;
     color: var(--text2);
     font-size: 0.78rem;
@@ -373,7 +376,7 @@
     align-items: center;
     margin-bottom: 8px;
     font-size: 0.75rem;
-    padding: 0 4px;
+    padding: 0 6px;
   }
 
   .stats-bar .count {
@@ -412,7 +415,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 13px 14px;
+    padding: 14px 14px;
     background: var(--card);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -466,8 +469,8 @@
   /* checkbox */
   .checkbox {
     flex-shrink: 0;
-    width: 22px; height: 22px;
-    border: 2.5px solid #e8c8d8;
+    width: 24px; height: 24px;
+    border: 2.5px solid var(--checkbox-border);
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.25s ease;
@@ -531,12 +534,12 @@
 
   /* delete btn */
   .btn-delete {
-    width: 30px; height: 30px;
+    width: 34px; height: 34px;
     border: none;
     border-radius: 10px;
     background: transparent;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -596,7 +599,7 @@
   .footer {
     text-align: center;
     margin-top: auto;
-    padding-top: 18px;
+    padding: 14px 0 8px;
     font-size: 0.7rem;
     color: var(--text2);
     opacity: 0.6;
