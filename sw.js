@@ -1,12 +1,12 @@
 /* ─── 魔法待办 Service Worker ─── */
-const CACHE_NAME = 'maho-todo-v5';
-// 使用相对路径，自动适配部署位置
+const CACHE_NAME = 'maho-todo-v6';
+// icon 文件列表（manifest 不被缓存，始终走网络）
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json',
   './icon.svg',
   './icon-192.png',
+  './icon-180.png',
   './icon-512.png'
 ];
 

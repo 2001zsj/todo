@@ -10,7 +10,8 @@
 <!-- PWA -->
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/svg+xml" href="./icon.svg">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
 <meta name="apple-mobile-web-app-title" content="魔法待办">
 <meta name="apple-mobile-web-app-status-bar-style" content="pink-translucent">
 <meta name="theme-color" content="#ff6b9d">
@@ -741,35 +742,41 @@
      ══════════════════════════════════════ */
   .theme-switch {
     position: fixed;
-    bottom: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    bottom: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     left: 50%; transform: translateX(-50%);
     z-index: 99;
     display: flex;
-    gap: 5px;
+    gap: 4px;
     background: var(--card);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-radius: 28px;
-    padding: 5px;
+    border-radius: 26px;
+    padding: 4px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.12);
     border: 1.5px solid var(--border);
+    max-width: calc(100vw - 24px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .theme-switch button {
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 24px;
+    height: 34px;
+    min-width: 34px;
+    padding: 0 12px;
+    border-radius: 22px;
     border: 2px solid transparent;
     cursor: pointer;
     transition: all 0.25s ease;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     background: transparent;
     color: var(--text2);
     white-space: nowrap;
+    flex-shrink: 0;
   }
+  .theme-switch button .label { display: inline; }
   .theme-switch button.active {
     background: var(--grad-btn);
     color: #fff;
@@ -777,6 +784,12 @@
     box-shadow: 0 2px 12px rgba(196,113,237,0.3);
   }
   .theme-switch button:active { transform: scale(0.94); }
+
+  /* 手机窄屏：只显示 emoji，隐藏文字 */
+  @media (max-width: 400px) {
+    .theme-switch button { padding: 0 8px; min-width: 36px; justify-content: center; }
+    .theme-switch button .label { display: none; }
+  }
 
   /* ══════════════════════════════════════
      Theme overrides for hardcoded values
@@ -1095,10 +1108,10 @@
      Theme switch
      ══════════════════════════════════════ -->
 <div class="theme-switch" id="themeSwitch">
-  <button data-theme="sakura" class="active">🌸 樱梦</button>
-  <button data-theme="starry">🌙 星月</button>
-  <button data-theme="forest">🍃 森林</button>
-  <button data-theme="dark">🌑 暗夜</button>
+  <button data-theme="sakura" class="active">🌸<span class="label">樱梦</span></button>
+  <button data-theme="starry">🌙<span class="label">星月</span></button>
+  <button data-theme="forest">🍃<span class="label">森林</span></button>
+  <button data-theme="dark">🌑<span class="label">暗夜</span></button>
 </div>
 
 <!-- ══════════════════════════════════════
