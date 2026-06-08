@@ -982,6 +982,12 @@
       cb.className = 'checkbox';
       cb.dataset.action = 'toggle';
 
+      // delete btn
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-delete';
+      delBtn.dataset.action = 'delete';
+      delBtn.textContent = '🗑️';
+
       // text or edit
       let contentEl;
       if (editingId === t.id) {
@@ -989,6 +995,11 @@
         contentEl.className = 'edit-input';
         contentEl.value = t.text;
         contentEl.dataset.action = 'editInput';
+
+        li.appendChild(swipeBg);
+        li.appendChild(cb);
+        li.appendChild(contentEl);
+        li.appendChild(delBtn);
       } else {
         // text wrapper
         const textWrap = document.createElement('div');
@@ -1008,22 +1019,12 @@
           textWrap.appendChild(timeEl);
         }
 
+        li.appendChild(swipeBg);
+        li.appendChild(cb);
         li.appendChild(textWrap);
         li.appendChild(delBtn);
-        ul.appendChild(li);
-        return; // 跳过下面的 contentEl/delBtn 追加
       }
 
-      // delete btn
-      const delBtn = document.createElement('button');
-      delBtn.className = 'btn-delete';
-      delBtn.dataset.action = 'delete';
-      delBtn.textContent = '🗑️';
-
-      li.appendChild(swipeBg);
-      li.appendChild(cb);
-      li.appendChild(contentEl);
-      li.appendChild(delBtn);
       ul.appendChild(li);
     });
 

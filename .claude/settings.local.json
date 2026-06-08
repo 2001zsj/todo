@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m '🐛 修复渲染结构Bug：delBtn 声明提前 + 两分支结构统一 *)",
+      "Bash(git push *)"
+    ]
+  }
+}
