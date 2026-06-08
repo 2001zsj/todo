@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon.svg">
+<meta name="apple-mobile-web-app-title" content="魔法待办">
+<meta name="apple-mobile-web-app-status-bar-style" content="pink-translucent">
+<meta name="theme-color" content="#ff6b9d">
+<title>✨ 魔法待办</title>
+<style>
+  :root {
+    --pink: #ff6b9d;
+    --pink-light: #ffb8d0;
+    --purple: #c471ed;
+    --purple-light: #e8b4f8;
+    --blue: #64b5f6;
+    --bg: #fff5f9;
+    --card: rgba(255,255,255,0.88);
+    --text: #4a3055;
+    --text2: #9b7ea8;
+    --border: #f0d5e8;
+    --shadow: 0 4px 20px rgba(180,130,160,0.13);
+    --radius: 16px;
+    --safe-bottom: env(safe-area-inset-bottom, 12px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { height: 100%; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+                 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(170deg, #fff5f9 0%, #f8e8ff 35%, #eef3ff 65%, #fff0f5 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* ══════════════════════════════════════
+     Background decorations
+     ══════════════════════════════════════ */
+  .bg-deco {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sparkle {
+    position: absolute;
+    animation: sparkleFloat 3.5s ease-in-out infinite;
+    font-size: 1rem;
+    opacity: 0.45;
+  }
+  .sparkle:nth-child(1)  { top: 4%;  left: 8%;  animation-delay: 0s;    animation-duration: 3.2s; }
+  .sparkle:nth-child(2)  { top: 8%;  left: 88%; animation-delay: 0.7s;  animation-duration: 2.8s; }
+  .sparkle:nth-child(3)  { top: 25%; left: 5%;  animation-delay: 1.3s;  animation-duration: 3.6s; }
+  .sparkle:nth-child(4)  { top: 30%; left: 92%; animation-delay: 1.9s;  animation-duration: 3.0s; }
+  .sparkle:nth-child(5)  { top: 55%; left: 6%;  animation-delay: 2.5s;  animation-duration: 3.3s; }
+  .sparkle:nth-child(6)  { top: 50%; left: 91%; animation-delay: 0.4s;  animation-duration: 2.9s; }
+  .sparkle:nth-child(7)  { top: 72%; left: 10%; animation-delay: 1.6s;  animation-duration: 3.7s; }
+  .sparkle:nth-child(8)  { top: 68%; left: 87%; animation-delay: 2.2s;  animation-duration: 3.1s; }
+
+  @keyframes sparkleFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+    50%      { transform: translateY(-14px) scale(1.3); opacity: 0.75; }
+  }
+
+  .petal {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: radial-gradient(circle at 30% 30%, #ffb8d0, #ff85a8);
+    border-radius: 50% 0 50% 0;
+    animation: petalFall linear infinite;
+    opacity: 0;
+  }
+  .petal:nth-child(9)  { left: 10%; animation-duration: 9s;  animation-delay: 0s;  }
+  .petal:nth-child(10) { left: 28%; animation-duration: 11s; animation-delay: 2.5s; }
+  .petal:nth-child(11) { left: 72%; animation-duration: 10s; animation-delay: 4.5s; }
+  .petal:nth-child(12) { left: 88%; animation-duration: 12s; animation-delay: 1.5s; }
+  .petal:nth-child(13) { left: 45%; animation-duration: 8.5s; animation-delay: 3.5s; }
+  .petal:nth-child(14) { left: 58%; animation-duration: 10.5s;animation-delay: 5.5s; }
+
+  @keyframes petalFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    8%   { opacity: 0.5; }
+    92%  { opacity: 0.5; }
+    100% { transform: translateY(105vh) rotate(600deg); opacity: 0; }
+  }
+
+  /* ══════════════════════════════════════
+     Chibi characters — top bar style for mobile
+     ══════════════════════════════════════ */
+  .chibi-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 58px;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 6px 14px 0;
+    background: linear-gradient(to bottom, rgba(255,245,249,0.95) 60%, rgba(255,245,249,0) 100%);
+  }
+
+  .chibi-mini {
+    animation: chibiWave 3s ease-in-out infinite;
+  }
+  .chibi-mini:last-child { animation-delay: 0.8s; }
+
+  @keyframes chibiWave {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
+  }
+
+  /* ══════════════════════════════════════
+     Main App
+     ══════════════════════════════════════ */
+  .app {
+    width: 100%;
+    max-width: 460px;
+    padding: 60px 16px calc(20px + var(--safe-bottom));
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .header .mascot {
+    font-size: 2.8rem;
+    display: block;
+    animation: mascotBounce 2s ease-in-out infinite;
+    line-height: 1;
+  }
+
+  @keyframes mascotBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    30%      { transform: translateY(-10px) scale(1.08); }
+    50%      { transform: translateY(0) scale(1); }
+    70%      { transform: translateY(-5px) scale(1.04); }
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff6b9d, #c471ed, #64b5f6);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleShine 3s ease-in-out infinite;
+    letter-spacing: 2px;
+    margin-top: -4px;
+  }
+
+  @keyframes titleShine {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  .header .date {
+    font-size: 0.75rem;
+    color: var(--text2);
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* ── Input ── */
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .input-row input {
+    flex: 1;
+    padding: 13px 14px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text);
+    outline: none;
+    transition: 0.2s ease;
+    min-width: 0;
+  }
+
+  .input-row input:focus {
+    border-color: #c471ed;
+    box-shadow: 0 0 0 4px rgba(196,113,237,0.1);
+  }
+
+  .input-row input::placeholder { color: #ccb8d8; }
+
+  .input-row button {
+    padding: 13px 18px;
+    background: linear-gradient(135deg, #ff6b9d, #c471ed);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(196,113,237,0.3);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .input-row button:active {
+    transform: scale(0.94);
+    box-shadow: 0 2px 8px rgba(196,113,237,0.2);
+  }
+
+  /* ── Filters ── */
+  .filters {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 12px;
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: 5px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  .filters button {
+    flex: 1;
+    padding: 10px 6px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text2);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .filters button.active {
+    background: linear-gradient(135deg, #ff6b9d, #c471ed);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(196,113,237,0.25);
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+    padding: 0 4px;
+  }
+
+  .stats-bar .count {
+    background: linear-gradient(135deg, #ffe0ec, #f0d8ff);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #c471ed;
+    font-size: 0.73rem;
+  }
+
+  .stats-bar button {
+    background: none;
+    border: 1px solid #ffccd8;
+    color: #ff6b9d;
+    cursor: pointer;
+    font-size: 0.73rem;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    transition: 0.2s ease;
+  }
+
+  .stats-bar button:active { background: #fff0f5; }
+
+  /* ── Todo List ── */
+  .todo-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 14px;
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1.5px solid transparent;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .todo-item:active {
+    transform: scale(0.985);
+    border-color: #f0d5e8;
+  }
+
+  .todo-item.completed {
+    opacity: 0.5;
+    background: rgba(255,255,255,0.45);
+  }
+
+  /* swipe delete indicator */
+  .todo-item .swipe-bg {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 0;
+    background: linear-gradient(135deg, #ff6b6b, #ff4444);
+    border-radius: var(--radius);
+    transition: width 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 0;
+    color: #fff;
+    font-size: 1.1rem;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .todo-item .swipe-bg.show {
+    width: 70px;
+    padding-right: 16px;
+  }
+
+  .todo-item > *:not(.swipe-bg) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* checkbox */
+  .checkbox {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border: 2.5px solid #e8c8d8;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .todo-item.completed .checkbox {
+    background: linear-gradient(135deg, #ff6b9d, #c471ed);
+    border-color: transparent;
+  }
+
+  .checkbox::after {
+    content: '';
+    display: none;
+    width: 5px; height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translateY(-1px);
+  }
+
+  .todo-item.completed .checkbox::after { display: block; }
+
+  /* text */
+  .todo-text {
+    flex: 1;
+    font-size: 0.9rem;
+    word-break: break-all;
+    line-height: 1.4;
+    min-width: 0;
+  }
+
+  .todo-item.completed .todo-text {
+    text-decoration: line-through;
+    color: #c9a0c9;
+  }
+
+  /* edit input */
+  .edit-input {
+    flex: 1;
+    padding: 7px 10px;
+    border: 2px solid #c471ed;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    outline: none;
+    background: rgba(255,255,255,0.9);
+    color: var(--text);
+    box-shadow: 0 0 0 3px rgba(196,113,237,0.08);
+    min-width: 0;
+  }
+
+  /* delete btn */
+  .btn-delete {
+    width: 30px; height: 30px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.15s ease;
+    opacity: 0.5;
+  }
+
+  .todo-item:active .btn-delete,
+  .btn-delete.show { opacity: 1; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text2);
+  }
+
+  .empty-state .icon {
+    font-size: 4rem;
+    margin-bottom: 14px;
+    animation: emptyFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes emptyFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  .empty-state .msg {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  /* ── Animation ── */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .todo-item { animation: slideIn 0.28s ease; }
+
+  /* completed bounce */
+  @keyframes popIn {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(0.92); }
+    70%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .todo-item.popping { animation: popIn 0.3s ease; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 18px;
+    font-size: 0.7rem;
+    color: var(--text2);
+    opacity: 0.6;
+  }
+
+  .footer .heart {
+    display: inline-block;
+    animation: heartBeat 1.2s ease-in-out infinite;
+    color: #ff6b9d;
+  }
+
+  @keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    15%      { transform: scale(1.2); }
+    30%      { transform: scale(1); }
+  }
+
+  /* ══════════════════════════════════════
+     Toast
+     ══════════════════════════════════════ */
+  .toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(74,48,85,0.9);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 99;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ══════════════════════════════════════
+     Larger screens — show bigger chibis
+     ══════════════════════════════════════ */
+  @media (min-width: 700px) {
+    .chibi-bar { display: none; }
+
+    .chibi-side {
+      position: fixed;
+      bottom: 30px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .chibi-side.left  { left: max(8px, calc(50% - 320px)); }
+    .chibi-side.right { right: max(8px, calc(50% - 320px)); }
+    .chibi-side .chibi-bounce { animation: chibiSideBounce 4s ease-in-out infinite; }
+    .chibi-side.right .chibi-bounce { animation-delay: 1s; }
+
+    @keyframes chibiSideBounce {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+  }
+
+  @media (max-width: 699px) {
+    .chibi-side { display: none; }
+  }
+
+  /* ══════════════════════════════════════
+     Install banner
+     ══════════════════════════════════════ */
+  .install-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #4a3055, #3d2855);
+    color: #fff;
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(60,30,70,0.25);
+    position: relative;
+    overflow: hidden;
+    animation: bannerSlide 0.4s ease;
+  }
+  .install-banner.hidden { display: none; }
+
+  @keyframes bannerSlide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .install-banner::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 60px; height: 60px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+
+  .install-banner .banner-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    animation: mascotBounce 2s ease-in-out infinite;
+  }
+
+  .install-banner .banner-text {
+    flex: 1;
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+  .install-banner .banner-text strong { color: #ffb8d0; }
+
+  .install-banner .banner-btn {
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #ff6b9d, #c471ed);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .install-banner .banner-btn:active { transform: scale(0.94); }
+
+  .install-banner .banner-close {
+    position: absolute;
+    top: 4px; right: 8px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     Background
+     ══════════════════════════════════════ -->
+<div class="bg-deco">
+  <span class="sparkle">🌸</span>
+  <span class="sparkle">⭐</span>
+  <span class="sparkle">💫</span>
+  <span class="sparkle">🎀</span>
+  <span class="sparkle">✨</span>
+  <span class="sparkle">💖</span>
+  <span class="sparkle">🌟</span>
+  <span class="sparkle">🌷</span>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     Mobile: mini chibis in top bar
+     ══════════════════════════════════════ -->
+<div class="chibi-bar">
+  <!-- left mini chibi: pink hair -->
+  <div class="chibi-mini">
+    <svg width="44" height="48" viewBox="0 0 44 48">
+      <ellipse cx="22" cy="22" rx="14" ry="13" fill="#ffe0d0"/>
+      <path d="M8 22 Q8 10 18 6 Q24 3 30 6 Q38 10 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="#ffb8d0"/>
+      <path d="M8 22 Q10 14 16 10 Q13 16 12 20 Q10 24 8 22 Z" fill="#ff85a8"/>
+      <path d="M36 22 Q34 14 28 10 Q31 16 32 20 Q34 24 36 22 Z" fill="#ff85a8"/>
+      <!-- eyes -->
+      <circle cx="16" cy="22" r="3" fill="#4a3055"/>
+      <circle cx="28" cy="22" r="3" fill="#4a3055"/>
+      <circle cx="15" cy="21" r="1.2" fill="#fff"/>
+      <circle cx="27" cy="21" r="1.2" fill="#fff"/>
+      <!-- blush -->
+      <ellipse cx="11" cy="26" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <ellipse cx="33" cy="26" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <!-- smile -->
+      <path d="M17 28 Q22 32 27 28" fill="none" stroke="#d88" stroke-width="1" stroke-linecap="round"/>
+      <!-- ahoge -->
+      <path d="M22 9 Q24 3 28 1" fill="none" stroke="#ff85a8" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- body -->
+      <ellipse cx="22" cy="44" rx="12" ry="6" fill="#ffb8d0"/>
+      <!-- ribbon -->
+      <circle cx="22" cy="38" r="2.5" fill="#ff6b9d"/>
+    </svg>
+  </div>
+  <!-- right mini chibi: blue hair -->
+  <div class="chibi-mini">
+    <svg width="44" height="48" viewBox="0 0 44 48">
+      <ellipse cx="22" cy="22" rx="14" ry="13" fill="#ffe0d0"/>
+      <path d="M8 22 Q8 10 18 6 Q24 3 30 6 Q38 10 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="#b8d4ff"/>
+      <!-- twin tails -->
+      <path d="M10 18 Q4 20 2 28 Q0 34 3 36 Q5 32 7 26 Q9 20 8 18 Z" fill="#a0c8ff"/>
+      <path d="M34 18 Q40 20 42 28 Q44 34 41 36 Q39 32 37 26 Q35 20 36 18 Z" fill="#a0c8ff"/>
+      <circle cx="6" cy="28" r="3" fill="#7eb8ff"/>
+      <circle cx="38" cy="28" r="3" fill="#7eb8ff"/>
+      <!-- hair ties -->
+      <circle cx="6" cy="28" r="2.2" fill="#ff6b9d"/>
+      <circle cx="38" cy="28" r="2.2" fill="#ff6b9d"/>
+      <!-- eyes (happy closed) -->
+      <path d="M12 22 Q16 19 20 22" fill="none" stroke="#4a3055" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M24 22 Q28 19 32 22" fill="none" stroke="#4a3055" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- blush -->
+      <ellipse cx="11" cy="25" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <ellipse cx="33" cy="25" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <!-- mouth -->
+      <ellipse cx="22" cy="27" rx="2.5" ry="2" fill="#e88"/>
+      <!-- body -->
+      <ellipse cx="22" cy="44" rx="12" ry="6" fill="#b8d4ff"/>
+      <!-- star -->
+      <text x="34" y="6" font-size="10">⭐</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     Desktop: side chibis (hidden on mobile)
+     ══════════════════════════════════════ -->
+<div class="chibi-side left">
+  <div class="chibi-bounce">
+    <svg width="130" height="210" viewBox="0 0 130 210">
+      <ellipse cx="65" cy="200" rx="38" ry="7" fill="rgba(200,150,180,0.18)"/>
+      <path d="M38 158 Q34 172 32 186 L42 190 L65 192 L88 190 L98 186 Q96 172 92 158 Z" fill="url(#dG1)"/>
+      <defs><linearGradient id="dG1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ff85a8"/><stop offset="100%" stop-color="#ff5277"/>
+      </linearGradient></defs>
+      <path d="M42 162 L65 192 L88 162" fill="none" stroke="#ffb8d0" stroke-width="1.2" opacity="0.6"/>
+      <circle cx="65" cy="158" r="4" fill="#fff"/>
+      <path d="M38 162 Q20 168 16 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M92 162 Q110 168 114 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="16" cy="176" r="5" fill="#ffe0d0"/>
+      <circle cx="114" cy="176" r="5" fill="#ffe0d0"/>
+      <rect x="59" y="146" width="12" height="12" rx="4" fill="#ffe0d0"/>
+      <ellipse cx="65" cy="128" rx="27" ry="29" fill="#ffe0d0"/>
+      <path d="M38 128 Q36 100 50 92 Q58 84 72 84 Q84 84 92 92 Q102 100 92 128 Q100 124 102 110 Q105 96 98 88 Q86 76 65 78 Q44 78 36 88 Q28 96 32 110 Q34 124 38 128 Z" fill="url(#hG1)"/>
+      <defs><linearGradient id="hG1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffb8d0"/><stop offset="100%" stop-color="#ff7096"/>
+      </linearGradient></defs>
+      <path d="M38 116 Q48 98 65 96 Q82 98 92 116 Q88 106 80 102 Q65 98 50 102 Q42 106 38 116 Z" fill="#ff85a8"/>
+      <path d="M36 118 Q32 134 34 148 Q36 154 24 156 Q18 148 24 138 Q28 128 36 118 Z" fill="url(#hG1)" opacity="0.85"/>
+      <path d="M94 118 Q98 134 96 148 Q94 154 106 156 Q112 148 106 138 Q102 128 94 118 Z" fill="url(#hG1)" opacity="0.85"/>
+      <ellipse cx="55" cy="126" rx="7" ry="8.5" fill="#fff"/>
+      <ellipse cx="75" cy="126" rx="7" ry="8.5" fill="#fff"/>
+      <ellipse cx="56" cy="127" rx="4.8" ry="5.8" fill="#4a3055"/>
+      <ellipse cx="76" cy="127" rx="4.8" ry="5.8" fill="#4a3055"/>
+      <circle cx="53" cy="124" r="2.2" fill="#fff"/>
+      <circle cx="73" cy="124" r="2.2" fill="#fff"/>
+      <ellipse cx="46" cy="136" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <ellipse cx="84" cy="136" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <path d="M58 140 Q65 146 72 140" fill="none" stroke="#d88" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M65 84 Q68 72 74 68" fill="none" stroke="#ff85a8" stroke-width="2" stroke-linecap="round"/>
+      <text x="98" y="108" font-size="13">🎀</text>
+      <!-- wand -->
+      <g transform="translate(18, 168) rotate(-22)">
+        <rect x="0" y="-2" width="34" height="3.5" rx="1.5" fill="#f8d878"/>
+        <circle cx="36" cy="0" r="7" fill="#ffe066"/>
+        <text x="36" y="2" font-size="12" text-anchor="middle">⭐</text>
+      </g>
+      <path d="M48 190 Q44 200 42 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M82 190 Q86 200 88 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="#ff5277"/>
+      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="#ff5277"/>
+    </svg>
+  </div>
+</div>
+
+<div class="chibi-side right">
+  <div class="chibi-bounce">
+    <svg width="130" height="210" viewBox="0 0 130 210">
+      <ellipse cx="65" cy="200" rx="38" ry="7" fill="rgba(200,150,180,0.18)"/>
+      <path d="M38 158 Q34 172 32 186 L42 190 L65 192 L88 190 L98 186 Q96 172 92 158 Z" fill="url(#dG2)"/>
+      <defs><linearGradient id="dG2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#a8c8ff"/><stop offset="100%" stop-color="#6ba3ff"/>
+      </linearGradient></defs>
+      <circle cx="65" cy="158" r="4" fill="#fff"/>
+      <path d="M38 162 Q22 168 18 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M92 162 Q108 168 112 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="18" cy="176" r="5" fill="#ffe0d0"/>
+      <circle cx="112" cy="176" r="5" fill="#ffe0d0"/>
+      <rect x="59" y="146" width="12" height="12" rx="4" fill="#ffe0d0"/>
+      <ellipse cx="65" cy="128" rx="27" ry="29" fill="#ffe0d0"/>
+      <path d="M38 128 Q36 100 50 92 Q58 84 72 84 Q84 84 92 92 Q102 100 92 128 Q100 124 102 110 Q105 96 98 88 Q86 76 65 78 Q44 78 36 88 Q28 96 32 110 Q34 124 38 128 Z" fill="url(#hG2)"/>
+      <defs><linearGradient id="hG2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#b8d4ff"/><stop offset="100%" stop-color="#7eb8ff"/>
+      </linearGradient></defs>
+      <!-- twin tails -->
+      <path d="M38 118 Q24 122 18 138 Q14 150 16 158 Q14 152 18 142 Q24 130 38 122 Z" fill="url(#hG2)"/>
+      <path d="M92 118 Q106 122 112 138 Q116 150 114 158 Q116 152 112 142 Q106 130 92 122 Z" fill="url(#hG2)"/>
+      <circle cx="16" cy="156" r="7" fill="#7eb8ff"/>
+      <circle cx="114" cy="156" r="7" fill="#7eb8ff"/>
+      <circle cx="22" cy="138" r="4" fill="#ff6b9d"/>
+      <circle cx="108" cy="138" r="4" fill="#ff6b9d"/>
+      <path d="M40 114 Q50 96 65 94 Q80 96 90 114 Q86 102 78 98 Q65 94 52 98 Q44 102 40 114 Z" fill="#7eb8ff"/>
+      <!-- happy eyes -->
+      <path d="M48 126 Q56 120 64 126" fill="none" stroke="#4a3055" stroke-width="2" stroke-linecap="round"/>
+      <path d="M66 126 Q74 120 82 126" fill="none" stroke="#4a3055" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="46" cy="134" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <ellipse cx="84" cy="134" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <ellipse cx="65" cy="139" rx="3.5" ry="2.5" fill="#e88"/>
+      <text x="98" y="105" font-size="14">⭐</text>
+      <!-- notebook -->
+      <g transform="translate(14, 168) rotate(-8)">
+        <rect x="0" y="0" width="16" height="13" rx="2" fill="#fff" stroke="#ddd" stroke-width="0.7"/>
+        <line x1="2" y1="4" x2="14" y2="4" stroke="#ddd" stroke-width="0.5"/>
+        <line x1="2" y1="7" x2="10" y2="7" stroke="#ddd" stroke-width="0.5"/>
+      </g>
+      <path d="M48 190 Q44 200 42 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M82 190 Q86 200 88 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="#6ba3ff"/>
+      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="#6ba3ff"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     Toast
+     ══════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════
+     Main
+     ══════════════════════════════════════ -->
+<div class="app">
+
+  <!-- PWA install banner -->
+  <div class="install-banner hidden" id="installBanner">
+    <span class="banner-icon">📲</span>
+    <span class="banner-text"><strong>添加到主屏幕</strong><br>像 App 一样快速打开</span>
+    <button class="banner-btn" id="installBtn">✨ 安装</button>
+    <button class="banner-close" id="bannerClose">✕</button>
+  </div>
+
+  <header class="header">
+    <span class="mascot">🦄</span>
+    <h1>魔法待办清单</h1>
+    <p class="date"><span>🌸</span> <span id="currentDate"></span> <span>🌸</span></p>
+  </header>
+
+  <div class="input-row">
+    <input type="text" id="todoInput" placeholder="写下今天要做的事吧～" maxlength="150" autocomplete="off">
+    <button id="addBtn">✨ 添加</button>
+  </div>
+
+  <div class="filters">
+    <button class="active" data-filter="all">🌸 全部</button>
+    <button data-filter="active">📋 待办</button>
+    <button data-filter="completed">✅ 完成</button>
+  </div>
+
+  <div class="stats-bar">
+    <span class="count" id="statsText">共 0 条</span>
+    <button id="clearDoneBtn">🧹 清除已完成</button>
+  </div>
+
+  <div id="todoContainer" style="flex:1; display:flex; flex-direction:column;">
+    <!-- list or empty state rendered here -->
+  </div>
+
+  <footer class="footer">
+    用 <span class="heart">💕</span> 制作 · 左滑删除 · 双击编辑 · 可添加到桌面
+  </footer>
+</div>
+
+<script>
+(function () {
+  /* ─── DOM ─── */
+  const input    = document.getElementById('todoInput');
+  const addBtn   = document.getElementById('addBtn');
+  const container = document.getElementById('todoContainer');
+  const statsEl  = document.getElementById('statsText');
+  const clearBtn = document.getElementById('clearDoneBtn');
+  const filterBtns = document.querySelectorAll('.filters button');
+  const dateEl   = document.getElementById('currentDate');
+  const toastEl  = document.getElementById('toast');
+
+  /* ─── State ─── */
+  const KEY = 'maho_todo';
+  let todos = [];
+  let filter = 'all';
+  let editingId = null;
+  let toastTimer = null;
+
+  /* ─── Storage ─── */
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(todos)); } catch(e) {} }
+  function load() { try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : []; } catch(e) { return []; } }
+
+  /* ─── Filters ─── */
+  function filtered() {
+    if (filter === 'active')    return todos.filter(t => !t.done);
+    if (filter === 'completed') return todos.filter(t =>  t.done);
+    return [...todos];
+  }
+
+  /* ─── Toast ─── */
+  function toast(msg) {
+    if (toastTimer) clearTimeout(toastTimer);
+    toastEl.textContent = msg;
+    toastEl.classList.add('visible');
+    toastTimer = setTimeout(() => toastEl.classList.remove('visible'), 1500);
+  }
+
+  /* ─── Render ─── */
+  function render() {
+    const items = filtered();
+    const remaining = todos.filter(t => !t.done).length;
+    statsEl.textContent = `共 ${todos.length} 条 · ${remaining} 未完成`;
+
+    if (items.length === 0) {
+      const icons = { all: '🌸', active: '🎉', completed: '😴' };
+      const msgs  = {
+        all: '还没有任务哦～<br>快添加今天要做的事吧！',
+        active: '全部完成啦！<br>你超棒的～ 🎉',
+        completed: '还没有已完成的任务…<br>加油完成第一项吧！'
+      };
+      container.innerHTML = `<div class="empty-state">
+        <div class="icon">${icons[filter]}</div>
+        <div class="msg">${msgs[filter]}</div>
+      </div>`;
+      return;
+    }
+
+    const ul = document.createElement('ul');
+    ul.className = 'todo-list';
+
+    items.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'todo-item' + (t.done ? ' completed' : '');
+      li.dataset.id = t.id;
+
+      // swipe bg
+      const swipeBg = document.createElement('div');
+      swipeBg.className = 'swipe-bg';
+      swipeBg.textContent = '🗑️';
+
+      // checkbox
+      const cb = document.createElement('div');
+      cb.className = 'checkbox';
+      cb.dataset.action = 'toggle';
+
+      // text or edit
+      let contentEl;
+      if (editingId === t.id) {
+        contentEl = document.createElement('input');
+        contentEl.className = 'edit-input';
+        contentEl.value = t.text;
+        contentEl.dataset.action = 'editInput';
+      } else {
+        contentEl = document.createElement('span');
+        contentEl.className = 'todo-text';
+        contentEl.textContent = t.text;
+        contentEl.dataset.action = 'edit';
+      }
+
+      // delete btn
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-delete';
+      delBtn.dataset.action = 'delete';
+      delBtn.textContent = '🗑️';
+
+      li.appendChild(swipeBg);
+      li.appendChild(cb);
+      li.appendChild(contentEl);
+      li.appendChild(delBtn);
+      ul.appendChild(li);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(ul);
+
+    // auto-focus edit input
+    if (editingId) {
+      requestAnimationFrame(() => {
+        const inp = container.querySelector('[data-action="editInput"]');
+        if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+      });
+    }
+  }
+
+  /* ─── Actions ─── */
+  function add(text) {
+    const t = text.trim();
+    if (!t) return;
+    todos.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text: t, done: false });
+    save(); render();
+    input.value = '';
+    input.focus();
+  }
+
+  function toggle(id) {
+    const t = todos.find(t => t.id === id);
+    if (!t) return;
+    t.done = !t.done;
+    save(); render();
+    // pop animation
+    requestAnimationFrame(() => {
+      const el = container.querySelector(`[data-id="${id}"]`);
+      if (el) { el.classList.add('popping'); el.addEventListener('animationend', () => el.classList.remove('popping'), {once:true}); }
+    });
+    if (t.done) toast('✅ 任务完成！');
+  }
+
+  function remove(id) {
+    const idx = todos.findIndex(t => t.id === id);
+    if (idx === -1) return;
+    const wasEditing = editingId === id;
+    todos.splice(idx, 1);
+    if (wasEditing) editingId = null;
+    save(); render();
+    toast('已删除');
+  }
+
+  function startEdit(id) {
+    editingId = id;
+    render();
+  }
+
+  function commitEdit(id, newText) {
+    const t = todos.find(t => t.id === id);
+    if (t) {
+      const trim = newText.trim();
+      if (trim) t.text = trim;
+    }
+    editingId = null;
+    save(); render();
+  }
+
+  function clearDone() {
+    const before = todos.length;
+    todos = todos.filter(t => !t.done);
+    if (before === todos.length) { toast('没有已完成的任务哦～'); return; }
+    editingId = null;
+    save(); render();
+    toast(`清除了 ${before - todos.length} 条 🧹`);
+  }
+
+  function setFilter(f) {
+    filter = f;
+    editingId = null;
+    filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+    render();
+  }
+
+  /* ─── Swipe to delete ─── */
+  let touchStartX = 0, touchStartY = 0, swipeTarget = null, swiped = false;
+
+  container.addEventListener('touchstart', e => {
+    const item = e.target.closest('.todo-item');
+    if (!item || editingId) return;
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+    swipeTarget = item;
+    swiped = false;
+  }, { passive: true });
+
+  container.addEventListener('touchmove', e => {
+    if (!swipeTarget) return;
+    const t = e.touches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    // only horizontal swipe
+    if (Math.abs(dx) > Math.abs(dy) && dx < -25) {
+      const bg = swipeTarget.querySelector('.swipe-bg');
+      if (bg) bg.classList.add('show');
+      swiped = true;
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchend', e => {
+    if (!swipeTarget) return;
+    // reset all swipe states
+    document.querySelectorAll('.swipe-bg.show').forEach(b => b.classList.remove('show'));
+    if (swiped) {
+      const id = swipeTarget.dataset.id;
+      if (id) {
+        // visual feedback before delete
+        swipeTarget.style.transform = 'translateX(-80px)';
+        swipeTarget.style.opacity = '0';
+        swipeTarget.style.transition = 'all 0.25s ease';
+        swipeTarget.addEventListener('transitionend', function handler() {
+          swipeTarget.removeEventListener('transitionend', handler);
+          remove(id);
+        });
+      }
+    }
+    swipeTarget = null;
+    swiped = false;
+  });
+
+  /* ─── Click delegation ─── */
+  container.addEventListener('click', e => {
+    const btn  = e.target.closest('[data-action]');
+    const item = e.target.closest('.todo-item');
+    if (!btn || !item) return;
+    if (editingId) return; // ignore clicks while editing
+    const id = item.dataset.id;
+    const action = btn.dataset.action;
+
+    if (action === 'toggle')  toggle(id);
+    if (action === 'delete')  remove(id);
+    if (action === 'edit')    startEdit(id);
+  });
+
+  /* ─── Double-click to edit ─── */
+  container.addEventListener('dblclick', e => {
+    const textEl = e.target.closest('.todo-text');
+    if (textEl && !editingId) {
+      const item = textEl.closest('.todo-item');
+      if (item) startEdit(item.dataset.id);
+    }
+  });
+
+  /* ─── Edit input keyboard ─── */
+  container.addEventListener('keydown', e => {
+    if (e.target.dataset.action !== 'editInput') return;
+    const item = e.target.closest('.todo-item');
+    if (!item) return;
+    if (e.key === 'Enter')  { e.preventDefault(); commitEdit(item.dataset.id, e.target.value); }
+    if (e.key === 'Escape') { e.preventDefault(); editingId = null; render(); }
+  });
+
+  /* ─── Edit input blur ─── */
+  container.addEventListener('blur', e => {
+    if (e.target.dataset.action === 'editInput') {
+      const item = e.target.closest('.todo-item');
+      if (item) commitEdit(item.dataset.id, e.target.value);
+    }
+  }, true);
+
+  /* ─── Add ─── */
+  addBtn.addEventListener('click', () => add(input.value));
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') add(input.value); });
+
+  /* ─── Clear done ─── */
+  clearBtn.addEventListener('click', clearDone);
+
+  /* ─── Filters ─── */
+  filterBtns.forEach(b => b.addEventListener('click', () => setFilter(b.dataset.filter)));
+
+  /* ─── Date ─── */
+  (function updateDate() {
+    dateEl.textContent = new Date().toLocaleDateString('zh-CN', {
+      year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+    });
+  })();
+
+  /* ─── PWA: Service Worker ─── */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('✅ SW registered:', reg.scope);
+      }).catch(err => {
+        console.log('SW registration failed:', err);
+      });
+    });
+  }
+
+  /* ─── PWA: Install Prompt ─── */
+  let deferredPrompt = null;
+  const installBanner = document.getElementById('installBanner');
+  const installBtn    = document.getElementById('installBtn');
+  const bannerClose   = document.getElementById('bannerClose');
+  const isStandalone  = window.matchMedia('(display-mode: standalone)').matches
+                     || navigator.standalone
+                     || window.matchMedia('(display-mode: fullscreen)').matches;
+
+  // 监听 beforeinstallprompt（Android Chrome 等）
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // 非独立窗口模式时显示安装横幅
+    if (!isStandalone) {
+      installBanner.classList.remove('hidden');
+    }
+  });
+
+  // 用户点击「安装」
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+      // 降级：iOS 或其他不支持 beforeinstallprompt 的情况
+      showIOSGuide();
+      return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('Install outcome:', outcome);
+    deferredPrompt = null;
+    installBanner.classList.add('hidden');
+  });
+
+  // 关闭横幅
+  bannerClose.addEventListener('click', () => {
+    installBanner.classList.add('hidden');
+  });
+
+  // 已安装后隐藏横幅
+  window.addEventListener('appinstalled', () => {
+    installBanner.classList.add('hidden');
+    deferredPrompt = null;
+    toast('🎉 安装成功！');
+  });
+
+  // iOS 引导提示
+  function showIOSGuide() {
+    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    if (isIOS) {
+      toast('🍎 点 Safari 底部「分享」→「添加到主屏幕」');
+    } else {
+      toast('📲 点浏览器菜单 →「添加到主屏幕」');
+    }
+    installBanner.classList.add('hidden');
+  }
+
+  // 如果在独立模式中，不显示横幅
+  if (isStandalone) {
+    installBanner.classList.add('hidden');
+  }
+
+  // 如果是不支持 beforeinstallprompt 且不是独立模式的 iOS，3秒后显示引导
+  if (!isStandalone && /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
+    setTimeout(() => {
+      if (!deferredPrompt) {
+        installBanner.classList.remove('hidden');
+        installBanner.querySelector('.banner-text').innerHTML =
+          '<strong>添加到主屏幕</strong><br>像 App 一样快速打开';
+        installBtn.textContent = '📘 教程';
+      }
+    }, 3000);
+  }
+
+  /* ─── Init ─── */
+  todos = load();
+  render();
+  input.focus();
+})();
+</script>
+</body>
+</html>

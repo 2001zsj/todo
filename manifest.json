@@ -1,0 +1,19 @@
+{
+  "name": "魔法待办清单",
+  "short_name": "待办清单",
+  "description": "一个可爱的动漫风格待办事项应用",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff5f9",
+  "theme_color": "#ff6b9d",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "zh-CN"
+}
