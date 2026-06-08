@@ -1,5 +1,5 @@
 /* ─── 魔法待办 Service Worker ─── */
-const CACHE_NAME = 'maho-todo-v4';
+const CACHE_NAME = 'maho-todo-v5';
 // 使用相对路径，自动适配部署位置
 const ASSETS = [
   './',

@@ -89,6 +89,27 @@
     --petal-bg: radial-gradient(circle at 30% 30%, #a7f3d0, #34d399);
   }
 
+  /* ── 主题：暗夜 ── */
+  body.theme-dark {
+    --pink: #f59e0b; --pink-light: #fcd34d; --purple: #8b5cf6; --purple-light: #c4b5fd; --blue: #67e8f9;
+    --bg: #0f172a; --card: rgba(30,41,59,0.92); --text: #e2e8f0; --text2: #94a3b8;
+    --border: #334155; --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --grad-body: linear-gradient(170deg, #0f172a 0%, #1e1b4b 40%, #0f172a 70%, #1a1a2e 100%);
+    --grad-title: linear-gradient(135deg, #f59e0b, #fbbf24, #eab308);
+    --grad-btn: linear-gradient(135deg, #8b5cf6, #6366f1);
+    --grad-filter: linear-gradient(135deg, #8b5cf6, #6366f1);
+    --grad-checkbox: linear-gradient(135deg, #8b5cf6, #6366f1);
+    --grad-count: linear-gradient(135deg, #1e293b, #334155);
+    --grad-banner: linear-gradient(135deg, #1e1b4b, #2e1065);
+    --grad-install-btn: linear-gradient(135deg, #8b5cf6, #6366f1);
+    --swipe-bg: linear-gradient(135deg, #ef4444, #dc2626);
+    --chibi-bar-bg: linear-gradient(to bottom, rgba(15,23,42,0.95) 60%, rgba(15,23,42,0) 100%);
+    --clear-btn-border: #fcd34d; --clear-btn-color: #f59e0b;
+    --checkbox-border: #475569; --completed-text: #64748b;
+    --petal-bg: radial-gradient(circle at 30% 30%, #fcd34d, #f59e0b);
+    --skin: #ffe0d0;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { height: 100%; }
 
@@ -707,36 +728,46 @@
   }
 
   /* ══════════════════════════════════════
-     Theme toggle
+     Theme toggle — bottom bar
      ══════════════════════════════════════ */
   .theme-switch {
     position: fixed;
-    top: 16px; right: 16px;
+    bottom: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    left: 50%; transform: translateX(-50%);
     z-index: 99;
     display: flex;
-    gap: 6px;
+    gap: 5px;
     background: var(--card);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 24px;
-    padding: 4px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 28px;
+    padding: 5px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    border: 1.5px solid var(--border);
   }
   .theme-switch button {
-    width: 30px; height: 30px;
-    border-radius: 50%;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 24px;
     border: 2px solid transparent;
     cursor: pointer;
-    transition: 0.2s ease;
-    font-size: 0.85rem;
+    transition: all 0.25s ease;
+    font-size: 0.8rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 4px;
     background: transparent;
+    color: var(--text2);
+    white-space: nowrap;
   }
-  .theme-switch button.active { border-color: var(--pink); transform: scale(1.1); }
-  .theme-switch button:active { transform: scale(0.9); }
+  .theme-switch button.active {
+    background: var(--grad-btn);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 2px 12px rgba(196,113,237,0.3);
+  }
+  .theme-switch button:active { transform: scale(0.94); }
 
   /* ══════════════════════════════════════
      Theme overrides for hardcoded values
@@ -810,6 +841,31 @@
   body.theme-forest .filters button:hover::after { background: linear-gradient(90deg, #10b981, #34d399); }
 
   body.theme-forest .todo-item:hover { border-color: #c6f0d8; box-shadow: 0 8px 28px rgba(80,150,110,0.15); }
+
+  /* --- 暗夜 --- */
+  body.theme-dark .filters button.active { background: var(--grad-filter); color: #fff; }
+  body.theme-dark .todo-item.completed .checkbox { background: var(--grad-checkbox); }
+  body.theme-dark .stats-bar .count { background: var(--grad-count); color: #f59e0b; }
+  body.theme-dark .install-banner { background: var(--grad-banner); }
+  body.theme-dark .install-banner .banner-btn { background: var(--grad-install-btn); }
+  body.theme-dark .chibi-bar { background: var(--chibi-bar-bg); }
+  body.theme-dark .checkbox { border-color: var(--checkbox-border); background: rgba(0,0,0,0.2); }
+  body.theme-dark .stats-bar button { border-color: var(--clear-btn-border); color: var(--clear-btn-color); }
+  body.theme-dark .todo-item.completed .todo-text { color: var(--completed-text); }
+  body.theme-dark .petal { background: var(--petal-bg); }
+  body.theme-dark .sparkle { filter: brightness(1.5); }
+  body.theme-dark .input-row input:focus { border-color: #8b5cf6; box-shadow: 0 0 0 4px rgba(139,92,246,0.2); }
+  body.theme-dark .input-row input::placeholder { color: #64748b; }
+  body.theme-dark .input-row button { box-shadow: 0 3px 12px rgba(139,92,246,0.3); }
+  body.theme-dark .filters button:hover::after { background: linear-gradient(90deg, #f59e0b, #8b5cf6); }
+  body.theme-dark .todo-item:hover { border-color: #475569; box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
+  body.theme-dark .clear-done { border-color: var(--clear-btn-border); color: var(--clear-btn-color); }
+  body.theme-dark .checkmark { border-color: #475569; }
+  body.theme-dark .theme-switch { background: rgba(30,41,59,0.92); border-color: #334155; }
+  body.theme-dark .theme-switch button { color: #94a3b8; }
+  body.theme-dark .theme-switch button.active { border-color: #f59e0b; color: #f59e0b; }
+  body.theme-dark .install-banner .banner-text strong { color: #fcd34d; }
+  body.theme-dark .toast { background: rgba(30,27,75,0.95); color: #fcd34d; border-color: rgba(245,158,11,0.2); }
 </style>
 </head>
 <body>
@@ -1000,9 +1056,10 @@
      Theme switch
      ══════════════════════════════════════ -->
 <div class="theme-switch" id="themeSwitch">
-  <button data-theme="sakura" class="active" title="樱花梦">🌸</button>
-  <button data-theme="starry" title="星月夜">🌙</button>
-  <button data-theme="forest" title="森林物语">🍃</button>
+  <button data-theme="sakura" class="active">🌸 樱梦</button>
+  <button data-theme="starry">🌙 星月</button>
+  <button data-theme="forest">🍃 森林</button>
+  <button data-theme="dark">🌑 暗夜</button>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -1111,10 +1168,9 @@
   const themeSwitch = document.getElementById('themeSwitch');
 
   function setTheme(name) {
-    document.body.classList.remove('theme-starry', 'theme-forest');
+    document.body.classList.remove('theme-starry', 'theme-forest', 'theme-dark');
     if (name !== 'sakura') document.body.classList.add('theme-' + name);
     localStorage.setItem(THEME_KEY, name);
-    // 更新按钮激活状态
     themeSwitch.querySelectorAll('button').forEach(b => {
       b.classList.toggle('active', b.dataset.theme === name);
     });
