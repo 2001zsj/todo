@@ -8,9 +8,9 @@
 <meta name="format-detection" content="telephone=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <!-- PWA -->
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" type="image/svg+xml" href="/icon.svg">
-<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-title" content="魔法待办">
 <meta name="apple-mobile-web-app-status-bar-style" content="pink-translucent">
 <meta name="theme-color" content="#ff6b9d">
@@ -1170,7 +1170,7 @@
   /* ─── PWA: Service Worker ─── */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').then(reg => {
+      navigator.serviceWorker.register('./sw.js').then(reg => {
         console.log('✅ SW registered:', reg.scope);
       }).catch(err => {
         console.log('SW registration failed:', err);
