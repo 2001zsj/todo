@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="./manifest2.json">
+<link rel="icon" type="image/svg+xml" href="./icon2.svg">
+<link rel="apple-touch-icon" href="./icon2.svg">
+<meta name="apple-mobile-web-app-title" content="星灵笔记">
+<meta name="theme-color" content="#1e1b4b">
+<title>🌙 星灵笔记</title>
+<style>
+  :root {
+    --p: #f59e0b; --pl: #fcd34d; --s: #8b5cf6; --sl: #c4b5fd;
+    --bg: #0f172a; --card: rgba(30,41,59,0.92); --tx: #e2e8f0; --tx2: #94a3b8;
+    --bd: #334155; --sh: 0 4px 24px rgba(0,0,0,0.4); --r: 16px;
+    --grad-body: linear-gradient(170deg, #0f172a 0%, #1e1b4b 40%, #0f172a 70%, #1a1a2e 100%);
+    --grad-title: linear-gradient(135deg, #f59e0b, #fbbf24, #eab308);
+    --grad-btn: linear-gradient(135deg, #8b5cf6, #6366f1);
+    --grad-filter: linear-gradient(135deg, #8b5cf6, #6366f1);
+    --grad-check: linear-gradient(135deg, #8b5cf6, #6366f1);
+    --grad-count: linear-gradient(135deg, #1e293b, #334155);
+    --grad-banner: linear-gradient(135deg, #1e1b4b, #2e1065);
+    --safe: env(safe-area-inset-bottom, 12px);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}html{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+    background:var(--grad-body);background-attachment:fixed;color:var(--tx);
+    min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;
+    overflow-x:hidden;position:relative;-webkit-tap-highlight-color:transparent;
+    -webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;
+  }
+
+  /* ── Starfield ── */
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle calc(2s + var(--d,0s)) ease-in-out infinite;animation-delay:var(--dl,0s)}
+  @keyframes twinkle{0%,100%{opacity:0.2;transform:scale(1)}50%{opacity:0.9;transform:scale(1.5)}}
+  .moon{position:fixed;top:8%;right:12%;font-size:2.5rem;animation:moonGlow 4s ease-in-out infinite;pointer-events:none;z-index:0;opacity:0.7}
+  @keyframes moonGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(251,191,36,0.4))}50%{filter:drop-shadow(0 0 20px rgba(251,191,36,0.8))}}
+  .shooting{position:absolute;width:80px;height:1.5px;background:linear-gradient(90deg,transparent,#fcd34d);border-radius:2px;
+    animation:shoot calc(1s + var(--sd,0s)) linear infinite;animation-delay:var(--sdl,0s);opacity:0}
+  @keyframes shoot{0%{transform:translateX(-80px) translateY(0);opacity:0}20%{opacity:1}40%{opacity:0;transform:translateX(200px) translateY(-30px)}100%{opacity:0;transform:translateX(200px) translateY(-30px)}}
+
+  /* ── Chibis ── */
+  .chibi-bar{position:fixed;top:0;left:0;right:0;height:58px;z-index:10;pointer-events:none;display:flex;
+    justify-content:space-between;align-items:flex-start;padding:6px 14px 0;
+    background:linear-gradient(to bottom,rgba(15,23,42,0.95) 60%,rgba(15,23,42,0) 100%)}
+  .chibi-mini{animation:float 3s ease-in-out infinite}.chibi-mini:last-child{animation-delay:0.8s}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+  /* ── App ── */
+  .app{width:100%;max-width:460px;padding:60px 16px calc(20px + var(--safe));position:relative;z-index:2;flex:1;display:flex;flex-direction:column}
+
+  /* Header */
+  .header{text-align:center;margin-bottom:20px}
+  .header .mascot{font-size:2.6rem;display:block;animation:bounce 2s ease-in-out infinite;line-height:1}
+  @keyframes bounce{0%,100%{transform:translateY(0)}30%{transform:translateY(-10px)}50%{transform:translateY(0)}70%{transform:translateY(-5px)}}
+  .header h1{font-size:1.5rem;font-weight:800;background:var(--grad-title);background-size:200% 200%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:shine 3s ease-in-out infinite;letter-spacing:2px;margin-top:-4px}
+  @keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .header .date{font-size:.75rem;color:var(--tx2);margin-top:1px;display:flex;align-items:center;justify-content:center;gap:6px}
+
+  /* Input */
+  .input-row{display:flex;gap:8px;margin-bottom:14px}
+  .input-row input{flex:1;padding:13px 14px;border:2px solid var(--bd);border-radius:var(--r);
+    font-size:.9rem;background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    color:var(--tx);outline:none;transition:.2s;min-width:0}
+  .input-row input:focus{border-color:#8b5cf6;box-shadow:0 0 0 4px rgba(139,92,246,0.15)}
+  .input-row input::placeholder{color:#64748b}
+  .input-row button{padding:13px 18px;background:var(--grad-btn);color:#fff;border:none;border-radius:var(--r);
+    font-size:.9rem;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;
+    box-shadow:0 3px 12px rgba(139,92,246,0.3);letter-spacing:1px;flex-shrink:0}
+  .input-row button:active{transform:scale(.94)}
+
+  /* Filters */
+  .filters{display:flex;gap:5px;margin-bottom:12px;background:var(--card);backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);border-radius:var(--r);padding:5px;box-shadow:var(--sh);border:1px solid var(--bd)}
+  .filters button{flex:1;padding:10px 6px;border:none;border-radius:12px;background:transparent;
+    color:var(--tx2);font-size:.78rem;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}
+  .filters button.active{background:var(--grad-filter);color:#fff;box-shadow:0 2px 10px rgba(139,92,246,0.3)}
+
+  /* Stats */
+  .stats-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.75rem;padding:0 4px}
+  .stats-bar .count{background:var(--grad-count);padding:4px 12px;border-radius:20px;font-weight:600;color:#f59e0b;font-size:.73rem}
+  .stats-bar button{background:none;border:1px solid #fcd34d;color:#f59e0b;cursor:pointer;font-size:.73rem;padding:5px 12px;border-radius:20px;font-weight:600;transition:.2s}
+  .stats-bar button:active{background:rgba(245,158,11,0.1)}
+
+  /* Todo list */
+  .todo-list{list-style:none;display:flex;flex-direction:column;gap:8px;flex:1}
+  .todo-item{display:flex;align-items:center;gap:10px;padding:13px 14px;background:var(--card);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:var(--r);
+    box-shadow:var(--sh);border:1.5px solid transparent;transition:all .25s;position:relative;overflow:hidden}
+  .todo-item:active{transform:scale(.985);border-color:#475569}
+  .todo-item.completed{opacity:.45;background:rgba(30,41,59,0.4)}
+  .todo-item .swipe-bg{position:absolute;right:0;top:0;bottom:0;width:0;background:linear-gradient(135deg,#ef4444,#dc2626);
+    border-radius:var(--r);transition:width .15s;display:none;align-items:center;justify-content:flex-end;
+    padding-right:0;color:#fff;font-size:1.1rem;overflow:hidden;z-index:0}
+  .todo-item .swipe-bg.show{display:flex;width:70px;padding-right:16px}
+  .todo-item>*:not(.swipe-bg){position:relative;z-index:1}
+
+  .checkbox{flex-shrink:0;width:22px;height:22px;border:2.5px solid #475569;border-radius:50%;
+    cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.2)}
+  .todo-item.completed .checkbox{background:var(--grad-check);border-color:transparent}
+  .checkbox::after{content:'';display:none;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translateY(-1px)}
+  .todo-item.completed .checkbox::after{display:block}
+
+  .todo-text{flex:1;font-size:.9rem;word-break:break-all;line-height:1.4;min-width:0}
+  .todo-item.completed .todo-text{text-decoration:line-through;color:#64748b}
+  .todo-time{display:block;font-size:.68rem;color:#64748b;margin-top:2px}
+
+  .edit-input{flex:1;padding:7px 10px;border:2px solid #8b5cf6;border-radius:10px;font-size:.9rem;
+    outline:none;background:rgba(30,41,59,0.9);color:var(--tx);box-shadow:0 0 0 3px rgba(139,92,246,0.1);min-width:0}
+  .btn-delete{width:30px;height:30px;border:none;border-radius:10px;background:transparent;cursor:pointer;
+    font-size:1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;opacity:.5}
+
+  /* Empty */
+  .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:40px 20px;text-align:center;color:var(--tx2)}
+  .empty-state .icon{font-size:4rem;margin-bottom:14px;animation:emptyFloat 3s ease-in-out infinite}
+  @keyframes emptyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .empty-state .msg{font-size:.9rem;line-height:1.6}
+
+  @keyframes slideIn{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .todo-item{animation:slideIn .28s ease}
+  @keyframes popIn{0%{transform:scale(1)}40%{transform:scale(.92)}70%{transform:scale(1.04)}100%{transform:scale(1)}}
+  .todo-item.popping{animation:popIn .3s ease}
+
+  .footer{text-align:center;margin-top:auto;padding-top:18px;font-size:.7rem;color:var(--tx2);opacity:.5}
+  .footer .heart{display:inline-block;animation:beat 1.2s ease-in-out infinite;color:#f59e0b}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}}
+
+  .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:rgba(30,27,75,0.95);color:#fcd34d;padding:8px 20px;border-radius:20px;
+    font-size:.8rem;z-index:99;opacity:0;transition:all .3s;pointer-events:none;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(245,158,11,0.2)}
+  .toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* Install banner */
+  .install-banner{display:flex;align-items:center;gap:10px;padding:12px 14px;
+    background:var(--grad-banner);color:#fff;border-radius:var(--r);margin-bottom:14px;
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);position:relative;overflow:hidden;animation:bannerSlide .4s ease}
+  .install-banner.hidden{display:none}@keyframes bannerSlide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+  .install-banner .banner-icon{font-size:1.5rem;flex-shrink:0}
+  .install-banner .banner-text{flex:1;font-size:.78rem;line-height:1.4}
+  .install-banner .banner-text strong{color:#fcd34d}
+  .install-banner .banner-btn{padding:8px 14px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border:none;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .install-banner .banner-btn:active{transform:scale(.94)}
+  .install-banner .banner-close{position:absolute;top:4px;right:8px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1rem;cursor:pointer;padding:2px 6px}
+
+  /* Themes */
+  .theme-switch{position:fixed;top:16px;right:16px;z-index:99;display:flex;gap:6px;
+    background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-radius:24px;padding:4px;box-shadow:var(--sh);border:1px solid var(--bd)}
+  .theme-switch button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;
+    cursor:pointer;transition:.2s;font-size:.85rem;display:flex;align-items:center;justify-content:center;background:transparent}
+  .theme-switch button.active{border-color:#f59e0b;transform:scale(1.1)}
+  .theme-switch button:active{transform:scale(.9)}
+
+  /* ── Theme overrides ── */
+  body.th-aurora{--p:#06b6d4;--pl:#67e8f9;--s:#0ea5e9;--sl:#bae6fd;
+    --grad-body:linear-gradient(170deg,#0c1d2e 0%,#0a2a3a 40%,#0c1d2e 70%,#0f1a2e 100%);
+    --grad-title:linear-gradient(135deg,#06b6d4,#22d3ee,#38bdf8);
+    --grad-btn:linear-gradient(135deg,#0ea5e9,#0891b2);--grad-filter:linear-gradient(135deg,#0ea5e9,#0891b2);
+    --grad-check:linear-gradient(135deg,#0ea5e9,#0891b2);
+    --grad-banner:linear-gradient(135deg,#0a2a3a,#083344)}
+  body.th-aurora .stats-bar .count{color:#06b6d4}body.th-aurora .stats-bar button{border-color:#67e8f9;color:#06b6d4}
+  body.th-aurora .moon{filter:hue-rotate(180deg)}
+  body.th-aurora .header h1{--grad-title:linear-gradient(135deg,#06b6d4,#22d3ee,#38bdf8)}
+
+  body.th-twilight{--p:#ec4899;--pl:#f9a8d4;--s:#d946ef;--sl:#f0abfc;
+    --grad-body:linear-gradient(170deg,#1a0a1e 0%,#2d0a3a 40%,#1a0a1e 70%,#1a1020 100%);
+    --grad-title:linear-gradient(135deg,#ec4899,#f472b6,#d946ef);
+    --grad-btn:linear-gradient(135deg,#d946ef,#a21caf);--grad-filter:linear-gradient(135deg,#d946ef,#a21caf);
+    --grad-check:linear-gradient(135deg,#d946ef,#a21caf);
+    --grad-banner:linear-gradient(135deg,#2d0a3a,#4a0a50)}
+  body.th-twilight .stats-bar .count{color:#ec4899}body.th-twilight .stats-bar button{border-color:#f9a8d4;color:#ec4899}
+  body.th-twilight .moon{filter:hue-rotate(280deg)}
+
+  @media(min-width:700px){.chibi-bar{display:none}}
+  @media(max-width:699px){.chibi-side{display:none}}
+  .chibi-side{position:fixed;bottom:30px;z-index:1;pointer-events:none}
+  .chibi-side.left{left:max(8px,calc(50% - 320px))}.chibi-side.right{right:max(8px,calc(50% - 320px))}
+  .chibi-side .chibi-bounce{animation:sideBounce 4s ease-in-out infinite}.chibi-side.right .chibi-bounce{animation-delay:1s}
+  @keyframes sideBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+</style>
+</head>
+<body>
+
+<div class="stars">
+  <div class="star" style="top:5%;left:10%;width:2px;height:2px;--d:0s;--dl:0s"></div>
+  <div class="star" style="top:12%;left:25%;width:1.5px;height:1.5px;--d:0.2s;--dl:0.3s"></div>
+  <div class="star" style="top:8%;left:78%;width:2.5px;height:2.5px;--d:0.5s;--dl:0.8s"></div>
+  <div class="star" style="top:20%;left:15%;width:1px;height:1px;--d:0.3s;--dl:1.2s"></div>
+  <div class="star" style="top:28%;left:70%;width:2px;height:2px;--d:0.1s;--dl:0.5s"></div>
+  <div class="star" style="top:35%;left:8%;width:3px;height:3px;--d:0.7s;--dl:0.2s"></div>
+  <div class="star" style="top:42%;left:90%;width:1.5px;height:1.5px;--d:0.4s;--dl:1.5s"></div>
+  <div class="star" style="top:52%;left:5%;width:2px;height:2px;--d:0.6s;--dl:0.7s"></div>
+  <div class="star" style="top:60%;left:82%;width:1px;height:1px;--d:0.8s;--dl:1.0s"></div>
+  <div class="star" style="top:68%;left:12%;width:2.5px;height:2.5px;--d:0.2s;--dl:0.4s"></div>
+  <div class="star" style="top:75%;left:88%;width:2px;height:2px;--d:0.5s;--dl:1.8s"></div>
+  <div class="star" style="top:82%;left:20%;width:1.5px;height:1.5px;--d:0.3s;--dl:0.9s"></div>
+  <div class="star" style="top:88%;left:65%;width:2px;height:2px;--d:0.1s;--dl:1.3s"></div>
+  <div class="star" style="top:92%;left:45%;width:1px;height:1px;--d:0.6s;--dl:0.6s"></div>
+  <!-- shooting stars -->
+  <div class="shooting" style="top:15%;left:20%;--sd:0s;--sdl:0s"></div>
+  <div class="shooting" style="top:30%;left:40%;--sd:0.5s;--sdl:4s;width:60px"></div>
+  <div class="shooting" style="top:50%;left:10%;--sd:0.3s;--sdl:7s;width:50px"></div>
+</div>
+<div class="moon">🌙</div>
+
+<div class="chibi-bar">
+  <!-- left: witch girl -->
+  <div class="chibi-mini">
+    <svg width="44" height="48" viewBox="0 0 44 48">
+      <ellipse cx="22" cy="22" rx="14" ry="13" fill="#ffe0d0"/>
+      <!-- dark hair -->
+      <path d="M8 22 Q8 8 18 4 Q24 1 30 4 Q38 8 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="#2d1b4e"/>
+      <!-- witch hat -->
+      <path d="M4 18 L22 0 L40 18 Q30 14 22 14 Q14 14 4 18 Z" fill="#4a2060"/>
+      <path d="M4 18 Q22 22 40 18" fill="none" stroke="#f59e0b" stroke-width="2"/>
+      <ellipse cx="22" cy="15" rx="4" ry="2" fill="#f59e0b" opacity="0.6"/>
+      <!-- eyes -->
+      <circle cx="16" cy="22" r="3" fill="#2d1b4e"/>
+      <circle cx="28" cy="22" r="3" fill="#2d1b4e"/>
+      <circle cx="15" cy="21" r="1.2" fill="#fff"/>
+      <circle cx="27" cy="21" r="1.2" fill="#fff"/>
+      <ellipse cx="11" cy="26" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <ellipse cx="33" cy="26" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <path d="M17 28 Q22 32 27 28" fill="none" stroke="#d88" stroke-width="1" stroke-linecap="round"/>
+      <!-- robe -->
+      <ellipse cx="22" cy="44" rx="12" ry="6" fill="#4a2060"/>
+      <circle cx="22" cy="38" r="2.5" fill="#f59e0b"/>
+    </svg>
+  </div>
+  <!-- right: wizard boy -->
+  <div class="chibi-mini">
+    <svg width="44" height="48" viewBox="0 0 44 48">
+      <ellipse cx="22" cy="22" rx="14" ry="13" fill="#ffe0d0"/>
+      <!-- silver hair -->
+      <path d="M8 22 Q8 10 18 6 Q24 3 30 6 Q38 10 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="#cbd5e1"/>
+      <path d="M8 18 Q6 24 4 32 Q2 36 4 34 Q8 28 8 18 Z" fill="#94a3b8"/>
+      <path d="M36 18 Q38 24 40 32 Q42 36 40 34 Q36 28 36 18 Z" fill="#94a3b8"/>
+      <!-- eyes (serious) -->
+      <rect x="13" y="19" width="3.5" height="5.5" rx="1.5" fill="#1e293b"/>
+      <rect x="27" y="19" width="3.5" height="5.5" rx="1.5" fill="#1e293b"/>
+      <circle cx="14.5" cy="20.5" r="1" fill="#fff"/>
+      <circle cx="28.5" cy="20.5" r="1" fill="#fff"/>
+      <!-- mouth -->
+      <path d="M18 28 L26 28" stroke="#666" stroke-width="1" stroke-linecap="round"/>
+      <!-- cloak -->
+      <ellipse cx="22" cy="44" rx="12" ry="6" fill="#1e3a5f"/>
+      <!-- glasses -->
+      <circle cx="15" cy="22" r="4.5" fill="none" stroke="#64748b" stroke-width="0.8"/>
+      <circle cx="29" cy="22" r="4.5" fill="none" stroke="#64748b" stroke-width="0.8"/>
+      <line x1="19.5" y1="22" x2="24.5" y2="22" stroke="#64748b" stroke-width="0.8"/>
+    </svg>
+  </div>
+</div>
+
+<div class="chibi-side left">
+  <div class="chibi-bounce">
+    <svg width="130" height="210" viewBox="0 0 130 210">
+      <ellipse cx="65" cy="200" rx="38" ry="7" fill="rgba(0,0,0,0.25)"/>
+      <!-- robe -->
+      <path d="M38 158 Q34 172 32 186 L42 190 L65 192 L88 190 L98 186 Q96 172 92 158 Z" fill="#4a2060"/>
+      <!-- belt -->
+      <path d="M40 168 L90 168" stroke="#f59e0b" stroke-width="3"/>
+      <circle cx="65" cy="168" r="5" fill="#f59e0b"/>
+      <!-- arms -->
+      <path d="M38 162 Q20 168 16 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M92 162 Q110 168 114 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="16" cy="176" r="5" fill="#ffe0d0"/>
+      <circle cx="114" cy="176" r="5" fill="#ffe0d0"/>
+      <!-- neck -->
+      <rect x="59" y="146" width="12" height="12" rx="4" fill="#ffe0d0"/>
+      <!-- head -->
+      <ellipse cx="65" cy="128" rx="27" ry="29" fill="#ffe0d0"/>
+      <!-- dark hair -->
+      <path d="M38 128 Q36 100 50 92 Q58 84 72 84 Q84 84 92 92 Q102 100 92 128 Q100 124 102 110 Q105 96 98 88 Q86 76 65 78 Q44 78 36 88 Q28 96 32 110 Q34 124 38 128 Z" fill="#2d1b4e"/>
+      <!-- witch hat -->
+      <path d="M30 100 L65 74 L100 100 Q82 96 65 96 Q48 96 30 100 Z" fill="#4a2060"/>
+      <path d="M30 100 Q65 104 100 100" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+      <!-- bangs -->
+      <path d="M38 116 Q48 98 65 96 Q82 98 92 116 Q88 106 80 102 Q65 98 50 102 Q42 106 38 116 Z" fill="#3d2560"/>
+      <!-- eyes -->
+      <ellipse cx="55" cy="126" rx="7" ry="8.5" fill="#fff"/>
+      <ellipse cx="75" cy="126" rx="7" ry="8.5" fill="#fff"/>
+      <ellipse cx="56" cy="127" rx="4.8" ry="5.8" fill="#2d1b4e"/>
+      <ellipse cx="76" cy="127" rx="4.8" ry="5.8" fill="#2d1b4e"/>
+      <circle cx="53" cy="124" r="2.2" fill="#fff"/>
+      <circle cx="73" cy="124" r="2.2" fill="#fff"/>
+      <ellipse cx="46" cy="136" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <ellipse cx="84" cy="136" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <path d="M58 140 Q65 146 72 140" fill="none" stroke="#d88" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- staff -->
+      <g transform="translate(20, 160) rotate(-15)">
+        <rect x="0" y="-2" width="45" height="3" rx="1.5" fill="#8b5a2b"/>
+        <circle cx="48" cy="0" r="8" fill="#f59e0b"/>
+        <circle cx="48" cy="0" r="4" fill="#fcd34d"/>
+      </g>
+      <!-- legs -->
+      <path d="M48 190 Q44 200 42 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M82 190 Q86 200 88 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="#4a2060"/>
+      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="#4a2060"/>
+    </svg>
+  </div>
+</div>
+
+<div class="chibi-side right">
+  <div class="chibi-bounce">
+    <svg width="130" height="210" viewBox="0 0 130 210">
+      <ellipse cx="65" cy="200" rx="38" ry="7" fill="rgba(0,0,0,0.25)"/>
+      <path d="M38 158 Q34 172 32 186 L42 190 L65 192 L88 190 L98 186 Q96 172 92 158 Z" fill="#1e3a5f"/>
+      <circle cx="65" cy="158" r="4" fill="#f59e0b"/>
+      <path d="M38 162 Q22 168 18 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M92 162 Q108 168 112 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="18" cy="176" r="5" fill="#ffe0d0"/>
+      <circle cx="112" cy="176" r="5" fill="#ffe0d0"/>
+      <rect x="59" y="146" width="12" height="12" rx="4" fill="#ffe0d0"/>
+      <ellipse cx="65" cy="128" rx="27" ry="29" fill="#ffe0d0"/>
+      <!-- silver hair -->
+      <path d="M38 128 Q36 100 50 92 Q58 84 72 84 Q84 84 92 92 Q102 100 92 128 Q100 124 102 110 Q105 96 98 88 Q86 76 65 78 Q44 78 36 88 Q28 96 32 110 Q34 124 38 128 Z" fill="#cbd5e1"/>
+      <path d="M36 118 Q22 122 18 138 Q14 148 16 156 Q14 150 18 140 Q22 128 36 122 Z" fill="#94a3b8"/>
+      <path d="M94 118 Q108 122 112 138 Q116 148 114 156 Q116 150 112 140 Q108 128 94 122 Z" fill="#94a3b8"/>
+      <circle cx="16" cy="156" r="7" fill="#94a3b8"/>
+      <circle cx="114" cy="156" r="7" fill="#94a3b8"/>
+      <!-- cape clasp -->
+      <circle cx="22" cy="138" r="4" fill="#f59e0b"/>
+      <circle cx="108" cy="138" r="4" fill="#f59e0b"/>
+      <!-- bangs -->
+      <path d="M40 114 Q50 96 65 94 Q80 96 90 114 Q86 102 78 98 Q65 94 52 98 Q44 102 40 114 Z" fill="#e2e8f0"/>
+      <!-- serious eyes -->
+      <circle cx="53" cy="126" r="3.5" fill="#1e293b"/>
+      <circle cx="77" cy="126" r="3.5" fill="#1e293b"/>
+      <circle cx="52" cy="125" r="1.2" fill="#fff"/>
+      <circle cx="75" cy="125" r="1.2" fill="#fff"/>
+      <ellipse cx="46" cy="134" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <ellipse cx="84" cy="134" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
+      <path d="M58 138 L72 138" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- glasses -->
+      <circle cx="53" cy="126" r="6" fill="none" stroke="#475569" stroke-width="1.5"/>
+      <circle cx="77" cy="126" r="6" fill="none" stroke="#475569" stroke-width="1.5"/>
+      <line x1="59" y1="126" x2="71" y2="126" stroke="#475569" stroke-width="1.5"/>
+      <!-- spell book -->
+      <g transform="translate(14, 168) rotate(-8)">
+        <rect x="0" y="0" width="16" height="13" rx="2" fill="#1e1b4b" stroke="#f59e0b" stroke-width="1"/>
+        <text x="8" y="10" font-size="8" text-anchor="middle" fill="#f59e0b">★</text>
+      </g>
+      <path d="M48 190 Q44 200 42 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <path d="M82 190 Q86 200 88 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="#1e3a5f"/>
+      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="#1e3a5f"/>
+    </svg>
+  </div>
+</div>
+
+<div class="theme-switch" id="themeSwitch">
+  <button data-theme="night" class="active" title="月夜">🌙</button>
+  <button data-theme="aurora" title="极光">🌊</button>
+  <button data-theme="twilight" title="暮光">💜</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="app">
+  <div class="install-banner hidden" id="installBanner">
+    <span class="banner-icon">📲</span>
+    <span class="banner-text"><strong>添加到主屏幕</strong><br>像 App 一样快速打开</span>
+    <button class="banner-btn" id="installBtn">✨ 安装</button>
+    <button class="banner-close" id="bannerClose">✕</button>
+  </div>
+
+  <header class="header">
+    <span class="mascot">🔮</span>
+    <h1>星灵笔记</h1>
+    <p class="date"><span>⭐</span> <span id="currentDate"></span> <span>🌟</span></p>
+  </header>
+
+  <div class="input-row">
+    <input type="text" id="todoInput" placeholder="写下你的星灵契约…" maxlength="150" autocomplete="off">
+    <button id="addBtn">✨ 契约</button>
+  </div>
+
+  <div class="filters">
+    <button class="active" data-filter="all">⭐ 全部</button>
+    <button data-filter="active">📜 待办</button>
+    <button data-filter="completed">🏆 完成</button>
+  </div>
+
+  <div class="stats-bar">
+    <span class="count" id="statsText">共 0 条</span>
+    <button id="clearDoneBtn">🔥 清除已完成</button>
+  </div>
+
+  <div id="todoContainer" style="flex:1;display:flex;flex-direction:column;"></div>
+
+  <footer class="footer">
+    用 <span class="heart">⭐</span> 铸造 · 左滑删除 · 双击编辑 · 可添加至桌面
+  </footer>
+</div>
+
+<script>
+(function () {
+  const input=document.getElementById('todoInput'),addBtn=document.getElementById('addBtn'),
+    container=document.getElementById('todoContainer'),statsEl=document.getElementById('statsText'),
+    clearBtn=document.getElementById('clearDoneBtn'),filterBtns=document.querySelectorAll('.filters button'),
+    dateEl=document.getElementById('currentDate'),toastEl=document.getElementById('toast'),
+    installBanner=document.getElementById('installBanner'),installBtn=document.getElementById('installBtn'),
+    bannerClose=document.getElementById('bannerClose'),
+    themeSwitch=document.getElementById('themeSwitch');
+
+  const KEY='hoshi_todo',THEME_KEY='hoshi_theme';
+  let todos=[],filter='all',editingId=null,toastTimer=null,deferredPrompt=null;
+
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(todos))}catch(e){}}
+  function load(){try{const r=localStorage.getItem(KEY);if(!r)return[];const d=JSON.parse(r);return Array.isArray(d)?d.filter(t=>t&&typeof t.id==='string'&&t.text&&t.text.trim()&&typeof t.done==='boolean'):[]}catch(e){return[]}}
+
+  function migrate(){let c=false;const n=new Date().toISOString();todos.forEach(t=>{if(t.done&&!t.completedAt){t.completedAt=n;c=true}});if(c)save()}
+
+  function filtered(){if(filter==='active')return todos.filter(t=>!t.done);if(filter==='completed')return todos.filter(t=>t.done);return[...todos]}
+
+  function formatTime(isoStr){if(!isoStr)return'';const d=new Date(isoStr);if(isNaN(d.getTime()))return'';return`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`}
+
+  function toast(msg){if(toastTimer)clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.add('visible');toastTimer=setTimeout(()=>toastEl.classList.remove('visible'),1500)}
+
+  function render(){
+    const items=filtered(),remaining=todos.filter(t=>!t.done).length,completed=todos.length-remaining;
+    statsEl.textContent=`共 ${todos.length} 条 · ${remaining} 未完成`;
+    clearBtn.style.visibility=completed>0?'visible':'hidden';
+    if(items.length===0){const icons={all:'⭐',active:'🎉',completed:'😴'},msgs={all:'还没有契约哦～<br>写下你的第一个星灵契约吧！',active:'全部完成啦！<br>星辰为你闪耀～ 🎉',completed:'还没有已完成的契约…<br>完成第一项吧！'};container.innerHTML=`<div class="empty-state"><div class="icon">${icons[filter]}</div><div class="msg">${msgs[filter]}</div></div>`;return}
+    const ul=document.createElement('ul');ul.className='todo-list';
+    items.forEach(t=>{const li=document.createElement('li');li.className='todo-item'+(t.done?' completed':'');li.dataset.id=t.id;
+      const swipeBg=document.createElement('div');swipeBg.className='swipe-bg';swipeBg.textContent='🗑️';
+      const cb=document.createElement('div');cb.className='checkbox';cb.dataset.action='toggle';
+      const delBtn=document.createElement('button');delBtn.className='btn-delete';delBtn.dataset.action='delete';delBtn.textContent='🗑️';
+      let contentEl;
+      if(editingId===t.id){contentEl=document.createElement('input');contentEl.className='edit-input';contentEl.value=t.text;contentEl.dataset.action='editInput';li.appendChild(swipeBg);li.appendChild(cb);li.appendChild(contentEl);li.appendChild(delBtn)}
+      else{const textWrap=document.createElement('div');textWrap.style.cssText='flex:1;min-width:0;';
+        contentEl=document.createElement('span');contentEl.className='todo-text';contentEl.textContent=t.text;contentEl.dataset.action='edit';textWrap.appendChild(contentEl);
+        if(t.done&&t.completedAt){const timeEl=document.createElement('span');timeEl.className='todo-time';timeEl.textContent=formatTime(t.completedAt);textWrap.appendChild(timeEl)}
+        li.appendChild(swipeBg);li.appendChild(cb);li.appendChild(textWrap);li.appendChild(delBtn)}
+      ul.appendChild(li)});
+    container.innerHTML='';container.appendChild(ul);
+    if(editingId){requestAnimationFrame(()=>{const inp=container.querySelector('[data-action="editInput"]');if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}})}
+  }
+
+  /* Actions */
+  function add(text){const t=text.trim();if(!t)return;todos.unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),text:t,done:false,completedAt:null});save();render();input.value='';input.focus()}
+  function toggle(id){const t=todos.find(t=>t.id===id);if(!t)return;t.done=!t.done;t.completedAt=t.done?new Date().toISOString():null;save();render();requestAnimationFrame(()=>{const el=container.querySelector(`[data-id="${id}"]`);if(el){el.classList.add('popping');el.addEventListener('animationend',()=>el.classList.remove('popping'),{once:true})}});if(t.done)toast('🏆 契约完成！')}
+  function remove(id){const idx=todos.findIndex(t=>t.id===id);if(idx===-1)return;const was=editingId===id;todos.splice(idx,1);if(was)editingId=null;save();render();toast('已删除')}
+  function startEdit(id){editingId=id;render()}
+  function commitEdit(id,newText){const t=todos.find(t=>t.id===id);if(t){const trim=newText.trim();if(trim)t.text=trim}editingId=null;save();render()}
+  function clearDone(){const before=todos.length;todos=todos.filter(t=>!t.done);if(before===todos.length){toast('没有已完成的契约哦～');return}editingId=null;save();render();toast(`清除了 ${before-todos.length} 条 🔥`)}
+  function setFilter(f){filter=f;editingId=null;filterBtns.forEach(b=>b.classList.toggle('active',b.dataset.filter===f));render()}
+
+  /* Theme */
+  function setTheme(name){document.body.classList.remove('th-aurora','th-twilight');if(name!=='night')document.body.classList.add('th-'+name);localStorage.setItem(THEME_KEY,name);themeSwitch.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.theme===name))}
+  themeSwitch.addEventListener('click',e=>{const btn=e.target.closest('button');if(btn)setTheme(btn.dataset.theme)});
+  const savedTheme=localStorage.getItem(THEME_KEY)||'night';setTheme(savedTheme);
+
+  /* Events */
+  container.addEventListener('click',e=>{const btn=e.target.closest('[data-action]'),item=e.target.closest('.todo-item');if(!btn||!item||editingId)return;const id=item.dataset.id,action=btn.dataset.action;if(action==='toggle')toggle(id);if(action==='delete')remove(id);if(action==='edit')startEdit(id)});
+  container.addEventListener('dblclick',e=>{const t=e.target.closest('.todo-text');if(t&&!editingId){const item=t.closest('.todo-item');if(item)startEdit(item.dataset.id)}});
+  container.addEventListener('keydown',e=>{if(e.target.dataset.action!=='editInput')return;const item=e.target.closest('.todo-item');if(!item)return;if(e.key==='Enter'){e.preventDefault();commitEdit(item.dataset.id,e.target.value)}if(e.key==='Escape'){e.preventDefault();editingId=null;render()}});
+  container.addEventListener('blur',e=>{if(e.target.dataset.action==='editInput'){const item=e.target.closest('.todo-item');if(item)commitEdit(item.dataset.id,e.target.value)}},true);
+  /* Swipe */
+  let tsx=0,tsy=0,swipeTarget=null,swiped=false;
+  container.addEventListener('touchstart',e=>{const item=e.target.closest('.todo-item');if(!item||editingId)return;const t=e.touches[0];tsx=t.clientX;tsy=t.clientY;swipeTarget=item;swiped=false},{passive:true});
+  container.addEventListener('touchmove',e=>{if(!swipeTarget)return;const t=e.touches[0],dx=t.clientX-tsx,dy=t.clientY-tsy;if(Math.abs(dx)>Math.abs(dy)&&dx<-25){const bg=swipeTarget.querySelector('.swipe-bg');if(bg)bg.classList.add('show');swiped=true}},{passive:true});
+  container.addEventListener('touchend',()=>{if(!swipeTarget)return;document.querySelectorAll('.swipe-bg.show').forEach(b=>b.classList.remove('show'));if(swiped){const id=swipeTarget.dataset.id;if(id){swipeTarget.style.transform='translateX(-80px)';swipeTarget.style.opacity='0';swipeTarget.style.transition='all 0.25s ease';swipeTarget.addEventListener('transitionend',function h(){swipeTarget.removeEventListener('transitionend',h);remove(id)})}}swipeTarget=null;swiped=false});
+  addBtn.addEventListener('click',()=>add(input.value));
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')add(input.value)});
+  clearBtn.addEventListener('click',clearDone);
+  filterBtns.forEach(b=>b.addEventListener('click',()=>setFilter(b.dataset.filter)));
+  dateEl.textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+
+  /* PWA */
+  if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw2.js').then(()=>console.log('SW ok')).catch(()=>{})})}
+  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!isStandalone)installBanner.classList.remove('hidden')});
+  installBtn.addEventListener('click',async()=>{if(!deferredPrompt){toast('🌙 点浏览器菜单→添加到主屏幕');return};deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;deferredPrompt=null;installBanner.classList.add('hidden')});
+  bannerClose.addEventListener('click',()=>installBanner.classList.add('hidden'));
+  window.addEventListener('appinstalled',()=>{installBanner.classList.add('hidden');deferredPrompt=null;toast('🎉 安装成功！')});
+  if(isStandalone)installBanner.classList.add('hidden');
+
+  /* Init */
+  todos=load();migrate();render();input.focus();
+})();
+</script>
+</body>
+</html>
