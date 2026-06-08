@@ -354,7 +354,7 @@
     background: linear-gradient(135deg, #ff6b6b, #ff4444);
     border-radius: var(--radius);
     transition: width 0.15s ease;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     padding-right: 0;
@@ -365,6 +365,7 @@
   }
 
   .todo-item .swipe-bg.show {
+    display: flex;
     width: 70px;
     padding-right: 16px;
   }
@@ -890,7 +891,17 @@
 
   /* ─── Storage ─── */
   function save() { try { localStorage.setItem(KEY, JSON.stringify(todos)); } catch(e) {} }
-  function load() { try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : []; } catch(e) { return []; } }
+  function load() {
+    try {
+      const r = localStorage.getItem(KEY);
+      if (!r) return [];
+      const data = JSON.parse(r);
+      // 过滤掉损坏的数据：必须有 id、text 不为空、done 是布尔值
+      return Array.isArray(data)
+        ? data.filter(t => t && typeof t.id === 'string' && t.text && t.text.trim() && typeof t.done === 'boolean')
+        : [];
+    } catch(e) { return []; }
+  }
 
   /* ─── Filters ─── */
   function filtered() {
@@ -911,7 +922,11 @@
   function render() {
     const items = filtered();
     const remaining = todos.filter(t => !t.done).length;
+    const completed = todos.length - remaining;
     statsEl.textContent = `共 ${todos.length} 条 · ${remaining} 未完成`;
+
+    // 没有已完成任务时隐藏清除按钮，避免被误认为空行
+    clearBtn.style.visibility = completed > 0 ? 'visible' : 'hidden';
 
     if (items.length === 0) {
       const icons = { all: '🌸', active: '🎉', completed: '😴' };
