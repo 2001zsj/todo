@@ -1269,7 +1269,7 @@
   function add(text) {
     const trimmed = text.trim();
     if (!trimmed) return;
-    todos.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text: t, done: false, completedAt: null });
+    todos.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text: trimmed, done: false, completedAt: null });
     save(); render();
     input.value = '';
     input.focus();
