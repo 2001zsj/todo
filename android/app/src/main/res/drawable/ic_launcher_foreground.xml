@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 魔法棒 -->
+    <path
+        android:fillColor="#ff6b9d"
+        android:pathData="M54,18 L58,32 L54,40 L50,32 Z" />
+    <!-- 星星 -->
+    <path
+        android:fillColor="#ff85a8"
+        android:pathData="M54,60 L57,68 L65,68 L59,73 L61,81 L54,77 L47,81 L49,73 L43,68 L51,68 Z" />
+</vector>
