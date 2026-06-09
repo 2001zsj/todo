@@ -1,5 +1,5 @@
 /* ─── 魔法待办 Service Worker ─── */
-const CACHE_NAME = 'maho-todo-v9';
+const CACHE_NAME = 'maho-todo-v10';
 // icon 文件列表（manifest 不被缓存，始终走网络）
 const ASSETS = [
   './',

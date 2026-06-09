@@ -49,6 +49,7 @@
     --time-text: #a080a8;
     --placeholder: #ccb8d8;
     --petal-bg: radial-gradient(circle at 30% 30%, #ffb8d0, #ff85a8);
+	    --petal-radius: 50% 0 50% 0; --petal-size: 10px; --star-opacity: 0.04; --moon-opacity: 0.12;
     --skin: #ffe0d0;
 	    --date-font: 'YouYuan', '幼圆', 'STYuanti', system-ui, sans-serif;
 	    --time-font: 'YouYuan', '幼圆', 'STYuanti', system-ui, sans-serif;
@@ -73,6 +74,7 @@
     --clear-btn-border: #c7d2fe; --clear-btn-color: #6366f1;
     --checkbox-border: #c4b5e0; --completed-text: #7a6a96; --time-text: #9888b0; --placeholder: #b8b0d0;
     --petal-bg: radial-gradient(circle at 30% 30%, #c7d2fe, #818cf8);
+	    --petal-radius: 0%; --petal-size: 8px; --star-opacity: 0.12; --moon-opacity: 0.25;
 	    --date-font: 'KaiTi', '楷体', 'STKaiti', 'Noto Serif SC', serif;
 	    --time-font: 'KaiTi', '楷体', 'STKaiti', 'Noto Serif SC', serif;
 	    --date-weight: 500; --date-spacing: 0.06em; --time-weight: 500; --time-spacing: 0.06em;
@@ -96,6 +98,7 @@
     --clear-btn-border: #a7f3d0; --clear-btn-color: #059669;
     --checkbox-border: #b7e4cf; --completed-text: #5a8a72; --time-text: #7aaa92; --placeholder: #a0c0b0;
     --petal-bg: radial-gradient(circle at 30% 30%, #a7f3d0, #34d399);
+	    --petal-radius: 50% 50% 0 50%; --petal-size: 9px; --star-opacity: 0.04; --moon-opacity: 0.10;
 	    --date-font: 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', serif;
 	    --time-font: 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', serif;
 	    --date-weight: 300; --date-spacing: 0.08em; --time-weight: 300; --time-spacing: 0.08em;
@@ -119,6 +122,7 @@
     --clear-btn-border: #fcd34d; --clear-btn-color: #facc15;
     --checkbox-border: #556477; --completed-text: #b0bdd0; --time-text: #cbd5e1; --placeholder: #94a3b8;
     --petal-bg: radial-gradient(circle at 30% 30%, #fcd34d, #f59e0b);
+	    --petal-radius: 50%; --petal-size: 7px; --star-opacity: 0.30; --moon-opacity: 0.75;
     --skin: #ffe0d0;
 	    --date-font: 'LiSu', '隶书', 'Baoli SC', 'Noto Serif SC', serif;
 	    --time-font: 'LiSu', '隶书', 'Baoli SC', 'Noto Serif SC', serif;
@@ -179,9 +183,9 @@
 
   .petal {
     position: absolute;
-    width: 10px; height: 10px;
-    background: radial-gradient(circle at 30% 30%, #ffb8d0, #ff85a8);
-    border-radius: 50% 0 50% 0;
+    width: var(--petal-size, 10px); height: var(--petal-size, 10px);
+    background: var(--petal-bg);
+    border-radius: var(--petal-radius, 50% 0 50% 0);
     animation: petalFall linear infinite;
     opacity: 0;
   }
@@ -199,6 +203,17 @@
     100% { transform: translateY(105vh) rotate(600deg); opacity: 0; }
   }
 
+  /* ── 手机端装饰缩小 ── */
+  @media (max-width: 480px) {
+    .sparkle { font-size: 0.7rem !important; }
+    .petal { --petal-size: 5px !important; }
+    .moon-glow { font-size: 1.5rem; top: 4%; right: 6%; }
+    @keyframes sparkleFloat {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.25; }
+      50%      { transform: translateY(-7px) scale(1.15); opacity: 0.6; }
+    }
+  }
+  
   /* ── 星空特效（暗夜主题专属）── */
   .starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .star-dot { position: absolute; background: #fff; border-radius: 50%; animation: twinkle calc(2s + var(--sd,0s)) ease-in-out infinite; animation-delay: var(--sdl,0s); opacity: 0.15; }
@@ -894,15 +909,13 @@
   body.theme-dark .theme-switch button.active { border-color: #f59e0b; color: #f59e0b; }
   body.theme-dark .install-banner .banner-text strong { color: #fcd34d; }
   body.theme-dark .toast { background: rgba(30,27,75,0.95); color: #fcd34d; border-color: rgba(245,158,11,0.2); }
-  body.theme-dark .star-dot { opacity: 0.3; }
   body.theme-dark .todo-text { font-weight: 500; }
   body.theme-dark .theme-switch button { color: #b0bdd0; }
-  body.theme-dark .moon-glow { opacity: 0.75; }
   body.theme-dark .bg-deco .sparkle { filter: brightness(1.4); }
   body.theme-dark .bg-deco .petal { opacity: 0.3; }
   /* 浅色主题下星空更淡 */
-  .star-dot { opacity: 0.06; transition: opacity 0.4s; }
-  .moon-glow { opacity: 0.15; transition: opacity 0.4s; }
+  .star-dot { opacity: var(--star-opacity, 0.06); transition: opacity 0.4s; }
+  .moon-glow { opacity: var(--moon-opacity, 0.15); transition: opacity 0.4s; }
 </style>
 </head>
 <body>
@@ -1227,6 +1240,26 @@
   const THEME_KEY = 'maho_theme';
   const themeSwitch = document.getElementById('themeSwitch');
 
+  /* ─── 装饰数据 ─── */
+  const SPARKLE_EMOJIS = {
+    sakura: ['🌸','🎀','💖','🌷','✨','💕','🌸','🎀'],
+    starry: ['⭐','🌟','💫','✨','🌙','🔮','⭐','💫'],
+    forest: ['🍀','🌿','🌸','🌼','💚','🦋','🍃','✨'],
+    dark:   ['🌑','💜','🔮','✨','🕯️','⭐','💫','🌙']
+  };
+  const MOON_EMOJI = { sakura:'🌸', starry:'🌟', forest:'🍃', dark:'🌙' };
+  const META_COLORS = { sakura:'#ff6b9d', starry:'#6366f1', forest:'#059669', dark:'#0f172a' };
+
+  function updateDecorations(theme) {
+    const sparkles = document.querySelectorAll('.bg-deco .sparkle');
+    const emojis = SPARKLE_EMOJIS[theme] || SPARKLE_EMOJIS.sakura;
+    sparkles.forEach((el, i) => { if (emojis[i]) el.textContent = emojis[i]; });
+    const moon = document.getElementById('moonGlow');
+    if (moon) moon.textContent = MOON_EMOJI[theme] || '🌙';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = META_COLORS[theme] || '#ff6b9d';
+  }
+
   function setTheme(name) {
     document.body.classList.remove('theme-starry', 'theme-forest', 'theme-dark');
     if (name !== 'sakura') document.body.classList.add('theme-' + name);
@@ -1234,6 +1267,7 @@
     themeSwitch.querySelectorAll('button').forEach(b => {
       b.classList.toggle('active', b.dataset.theme === name);
     });
+    updateDecorations(name);
   }
 
   themeSwitch.addEventListener('click', e => {
