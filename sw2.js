@@ -1,4 +1,4 @@
-const CACHE_NAME='hoshi-todo-v1';
+const CACHE_NAME='hoshi-todo-v2';
 const ASSETS=['./index2.html','./manifest2.json','./icon2.svg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE_NAME).map(x=>caches.delete(x)))));self.clients.claim()});
