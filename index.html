@@ -222,9 +222,9 @@
   
   /* ── 星空特效（暗夜主题专属）── */
   .starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-  .star-dot { position: absolute; background: #fff; border-radius: 50%; animation: twinkle calc(2s + var(--sd,0s)) ease-in-out infinite; animation-delay: var(--sdl,0s); opacity: 0.15; }
+  .star-dot { position: absolute; background: #fff; border-radius: 50%; animation: twinkle calc(2s + var(--sd,0s)) ease-in-out infinite; animation-delay: var(--sdl,0s); }
   @keyframes twinkle { 0%,100%{opacity:0.15;transform:scale(1)} 50%{opacity:1;transform:scale(1.8)} }
-  .moon-glow { position: fixed; top: 6%; right: 10%; font-size: 2.2rem; pointer-events: none; z-index: 0; animation: moonPulse 4s ease-in-out infinite; opacity: 0.5; }
+  .moon-glow { position: fixed; top: 6%; right: 10%; font-size: 2.2rem; pointer-events: none; z-index: 0; animation: moonPulse 4s ease-in-out infinite; }
   @keyframes moonPulse { 0%,100%{filter:drop-shadow(0 0 6px rgba(251,191,36,0.3))} 50%{filter:drop-shadow(0 0 18px rgba(251,191,36,0.8))} }
   .shooting { position: absolute; width: 60px; height: 1.5px; background: linear-gradient(90deg,transparent,#fcd34d); border-radius: 2px; animation: shoot calc(2s + var(--sd,0s)) linear infinite; animation-delay: var(--sdl,0s); opacity: 0; }
   @keyframes shoot { 0%{transform:translateX(-60px) translateY(0);opacity:0} 15%{opacity:0.8} 30%{opacity:0;transform:translateX(180px) translateY(-25px)} 100%{opacity:0;transform:translateX(180px) translateY(-25px)} }
@@ -235,7 +235,6 @@
   .chibi-bar {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 58px;
     z-index: 10;
     pointer-events: none;
     display: flex;
@@ -839,7 +838,6 @@
      ══════════════════════════════════════ */
 
   /* --- 星月夜 --- */
-  body.theme-starry .filter-btn .active,
   body.theme-starry .filters button.active { background: var(--grad-filter); color: #fff; }
 
   body.theme-starry .todo-item.completed .checkbox { background: var(--grad-checkbox); }
@@ -911,7 +909,6 @@
   body.theme-dark .todo-item:hover { border-color: #475569; box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
   body.theme-dark .checkmark { border-color: #475569; }
   body.theme-dark .theme-switch { background: rgba(30,41,59,0.92); border-color: #334155; }
-  body.theme-dark .theme-switch button { color: #94a3b8; }
   body.theme-dark .theme-switch button.active { border-color: #f59e0b; color: #f59e0b; }
   body.theme-dark .install-banner .banner-text strong { color: #fcd34d; }
   body.theme-dark .toast { background: rgba(30,27,75,0.95); color: #fcd34d; border-color: rgba(245,158,11,0.2); }
@@ -1270,8 +1267,8 @@
 
   /* ─── Actions ─── */
   function add(text) {
-    const t = text.trim();
-    if (!t) return;
+    const trimmed = text.trim();
+    if (!trimmed) return;
     todos.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text: t, done: false, completedAt: null });
     save(); render();
     input.value = '';
@@ -1279,18 +1276,18 @@
   }
 
   function toggle(id) {
-    const t = todos.find(t => t.id === id);
-    if (!t) return;
-    t.done = !t.done;
+    const todo = todos.find(x => x.id === id);
+    if (!todo) return;
+    todo.done = !todo.done;
     // 记录完成时间 / 取消完成时清除时间
-    t.completedAt = t.done ? new Date().toISOString() : null;
+    todo.completedAt = todo.done ? new Date().toISOString() : null;
     save(); render();
     // pop animation
     requestAnimationFrame(() => {
       const el = container.querySelector(`[data-id="${id}"]`);
       if (el) { el.classList.add('popping'); el.addEventListener('animationend', () => el.classList.remove('popping'), {once:true}); }
     });
-    if (t.done) toast('✅ 任务完成！');
+    if (todo.done) toast('✅ 任务完成！');
   }
 
   function remove(id) {
@@ -1309,10 +1306,10 @@
   }
 
   function commitEdit(id, newText) {
-    const t = todos.find(t => t.id === id);
-    if (t) {
+    const todo = todos.find(x => x.id === id);
+    if (todo) {
       const trim = newText.trim();
-      if (trim) t.text = trim;
+      if (trim) todo.text = trim;
     }
     editingId = null;
     save(); render();
@@ -1340,18 +1337,18 @@
   container.addEventListener('touchstart', e => {
     const item = e.target.closest('.todo-item');
     if (!item || editingId) return;
-    const t = e.touches[0];
-    touchStartX = t.clientX;
-    touchStartY = t.clientY;
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
     swipeTarget = item;
     swiped = false;
   }, { passive: true });
 
   container.addEventListener('touchmove', e => {
     if (!swipeTarget) return;
-    const t = e.touches[0];
-    const dx = t.clientX - touchStartX;
-    const dy = t.clientY - touchStartY;
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
     // only horizontal swipe
     if (Math.abs(dx) > Math.abs(dy) && dx < -25) {
       const bg = swipeTarget.querySelector('.swipe-bg');
@@ -1442,9 +1439,9 @@
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').then(reg => {
-        console.log('✅ SW registered:', reg.scope);
+        // SW registered
       }).catch(err => {
-        console.log('SW registration failed:', err);
+        // SW failed
       });
     });
   }
@@ -1477,7 +1474,7 @@
     }
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log('Install outcome:', outcome);
+    // Install attempted
     deferredPrompt = null;
     installBanner.classList.add('hidden');
   });
