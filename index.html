@@ -54,6 +54,7 @@
 	    --date-font: 'YouYuan', '幼圆', 'STYuanti', system-ui, sans-serif;
 	    --time-font: 'YouYuan', '幼圆', 'STYuanti', system-ui, sans-serif;
 	    --date-weight: 400; --date-spacing: 0.04em; --time-weight: 400; --time-spacing: 0.04em;
+    --chibi-skin: #ffe0d0; --chibi-eye: #4a3055; --chibi-blush: #ffc0c0; --chibi-hair1: #ffb8d0; --chibi-hair1d: #ff85a8; --chibi-hair2: #b8d4ff; --chibi-hair2d: #7eb8ff; --chibi-hair2m: #a0c8ff; --chibi-ribbon: #ff6b9d; --chibi-mouth: #d88;
   }
 
   /* ── 主题：星月夜 ── */
@@ -78,6 +79,7 @@
 	    --date-font: 'KaiTi', '楷体', 'STKaiti', 'Noto Serif SC', serif;
 	    --time-font: 'KaiTi', '楷体', 'STKaiti', 'Noto Serif SC', serif;
 	    --date-weight: 500; --date-spacing: 0.06em; --time-weight: 500; --time-spacing: 0.06em;
+    --chibi-skin: #ffe0d0; --chibi-eye: #1e1b4b; --chibi-blush: #c7d2fe; --chibi-hair1: #c4b5fd; --chibi-hair1d: #8b5cf6; --chibi-hair2: #67e8f9; --chibi-hair2d: #06b6d4; --chibi-hair2m: #a5f3fc; --chibi-ribbon: #818cf8; --chibi-mouth: #c084fc;
   }
 
   /* ── 主题：森林物语 ── */
@@ -102,6 +104,7 @@
 	    --date-font: 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', serif;
 	    --time-font: 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', serif;
 	    --date-weight: 300; --date-spacing: 0.08em; --time-weight: 300; --time-spacing: 0.08em;
+    --chibi-skin: #ffe0d0; --chibi-eye: #064e3b; --chibi-blush: #a7f3d0; --chibi-hair1: #a7f3d0; --chibi-hair1d: #34d399; --chibi-hair2: #fde68a; --chibi-hair2d: #f59e0b; --chibi-hair2m: #fcd34d; --chibi-ribbon: #10b981; --chibi-mouth: #6ee7b7;
   }
 
   /* ── 主题：暗夜 ── */
@@ -127,6 +130,7 @@
 	    --date-font: 'LiSu', '隶书', 'Baoli SC', 'Noto Serif SC', serif;
 	    --time-font: 'LiSu', '隶书', 'Baoli SC', 'Noto Serif SC', serif;
 	    --date-weight: 600; --date-spacing: 0.02em; --time-weight: 600; --time-spacing: 0.02em;
+    --chibi-skin: #ffe0d0; --chibi-eye: #e2e8f0; --chibi-blush: #fcd34d; --chibi-hair1: #fcd34d; --chibi-hair1d: #f59e0b; --chibi-hair2: #c4b5fd; --chibi-hair2d: #8b5cf6; --chibi-hair2m: #a78bfa; --chibi-ribbon: #f59e0b; --chibi-mouth: #fbbf24;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -208,6 +212,8 @@
     .sparkle { font-size: 0.7rem !important; }
     .petal { --petal-size: 5px !important; }
     .moon-glow { font-size: 1.5rem; top: 4%; right: 6%; }
+    .chibi-mini svg { width: 36px; height: 40px; }
+    .chibi-bar { height: 48px; padding: 3px 6px 0; }
     @keyframes sparkleFloat {
       0%, 100% { transform: translateY(0) scale(1); opacity: 0.25; }
       50%      { transform: translateY(-7px) scale(1.15); opacity: 0.6; }
@@ -970,51 +976,51 @@
   <!-- left mini chibi: pink hair -->
   <div class="chibi-mini">
     <svg width="44" height="48" viewBox="0 0 44 48">
-      <ellipse cx="22" cy="22" rx="14" ry="13" fill="#ffe0d0"/>
-      <path d="M8 22 Q8 10 18 6 Q24 3 30 6 Q38 10 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="#ffb8d0"/>
-      <path d="M8 22 Q10 14 16 10 Q13 16 12 20 Q10 24 8 22 Z" fill="#ff85a8"/>
-      <path d="M36 22 Q34 14 28 10 Q31 16 32 20 Q34 24 36 22 Z" fill="#ff85a8"/>
+      <ellipse cx="22" cy="22" rx="14" ry="13" fill="var(--chibi-skin)"/>
+      <path d="M8 22 Q8 10 18 6 Q24 3 30 6 Q38 10 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="var(--chibi-hair1)"/>
+      <path d="M8 22 Q10 14 16 10 Q13 16 12 20 Q10 24 8 22 Z" fill="var(--chibi-hair1d)"/>
+      <path d="M36 22 Q34 14 28 10 Q31 16 32 20 Q34 24 36 22 Z" fill="var(--chibi-hair1d)"/>
       <!-- eyes -->
-      <circle cx="16" cy="22" r="3" fill="#4a3055"/>
-      <circle cx="28" cy="22" r="3" fill="#4a3055"/>
+      <circle cx="16" cy="22" r="3" fill="var(--chibi-eye)"/>
+      <circle cx="28" cy="22" r="3" fill="var(--chibi-eye)"/>
       <circle cx="15" cy="21" r="1.2" fill="#fff"/>
       <circle cx="27" cy="21" r="1.2" fill="#fff"/>
       <!-- blush -->
-      <ellipse cx="11" cy="26" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
-      <ellipse cx="33" cy="26" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <ellipse cx="11" cy="26" rx="4" ry="2.5" fill="var(--chibi-blush)" opacity="0.5"/>
+      <ellipse cx="33" cy="26" rx="4" ry="2.5" fill="var(--chibi-blush)" opacity="0.5"/>
       <!-- smile -->
-      <path d="M17 28 Q22 32 27 28" fill="none" stroke="#d88" stroke-width="1" stroke-linecap="round"/>
+      <path d="M17 28 Q22 32 27 28" fill="none" stroke="var(--chibi-mouth)" stroke-width="1" stroke-linecap="round"/>
       <!-- ahoge -->
-      <path d="M22 9 Q24 3 28 1" fill="none" stroke="#ff85a8" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M22 9 Q24 3 28 1" fill="none" stroke="var(--chibi-hair1d)" stroke-width="1.5" stroke-linecap="round"/>
       <!-- body -->
-      <ellipse cx="22" cy="44" rx="12" ry="6" fill="#ffb8d0"/>
+      <ellipse cx="22" cy="44" rx="12" ry="6" fill="var(--chibi-hair1)"/>
       <!-- ribbon -->
-      <circle cx="22" cy="38" r="2.5" fill="#ff6b9d"/>
+      <circle cx="22" cy="38" r="2.5" fill="var(--chibi-ribbon)"/>
     </svg>
   </div>
   <!-- right mini chibi: blue hair -->
   <div class="chibi-mini">
     <svg width="44" height="48" viewBox="0 0 44 48">
-      <ellipse cx="22" cy="22" rx="14" ry="13" fill="#ffe0d0"/>
-      <path d="M8 22 Q8 10 18 6 Q24 3 30 6 Q38 10 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="#b8d4ff"/>
+      <ellipse cx="22" cy="22" rx="14" ry="13" fill="var(--chibi-skin)"/>
+      <path d="M8 22 Q8 10 18 6 Q24 3 30 6 Q38 10 36 22 Q34 14 28 10 Q22 7 16 10 Q10 14 8 22 Z" fill="var(--chibi-hair2)"/>
       <!-- twin tails -->
-      <path d="M10 18 Q4 20 2 28 Q0 34 3 36 Q5 32 7 26 Q9 20 8 18 Z" fill="#a0c8ff"/>
-      <path d="M34 18 Q40 20 42 28 Q44 34 41 36 Q39 32 37 26 Q35 20 36 18 Z" fill="#a0c8ff"/>
-      <circle cx="6" cy="28" r="3" fill="#7eb8ff"/>
-      <circle cx="38" cy="28" r="3" fill="#7eb8ff"/>
+      <path d="M10 18 Q4 20 2 28 Q0 34 3 36 Q5 32 7 26 Q9 20 8 18 Z" fill="var(--chibi-hair2m)"/>
+      <path d="M34 18 Q40 20 42 28 Q44 34 41 36 Q39 32 37 26 Q35 20 36 18 Z" fill="var(--chibi-hair2m)"/>
+      <circle cx="6" cy="28" r="3" fill="var(--chibi-hair2d)"/>
+      <circle cx="38" cy="28" r="3" fill="var(--chibi-hair2d)"/>
       <!-- hair ties -->
-      <circle cx="6" cy="28" r="2.2" fill="#ff6b9d"/>
-      <circle cx="38" cy="28" r="2.2" fill="#ff6b9d"/>
+      <circle cx="6" cy="28" r="2.2" fill="var(--chibi-ribbon)"/>
+      <circle cx="38" cy="28" r="2.2" fill="var(--chibi-ribbon)"/>
       <!-- eyes (happy closed) -->
-      <path d="M12 22 Q16 19 20 22" fill="none" stroke="#4a3055" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M24 22 Q28 19 32 22" fill="none" stroke="#4a3055" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M12 22 Q16 19 20 22" fill="none" stroke="var(--chibi-eye)" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M24 22 Q28 19 32 22" fill="none" stroke="var(--chibi-eye)" stroke-width="1.5" stroke-linecap="round"/>
       <!-- blush -->
-      <ellipse cx="11" cy="25" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
-      <ellipse cx="33" cy="25" rx="4" ry="2.5" fill="#ffc0c0" opacity="0.5"/>
+      <ellipse cx="11" cy="25" rx="4" ry="2.5" fill="var(--chibi-blush)" opacity="0.5"/>
+      <ellipse cx="33" cy="25" rx="4" ry="2.5" fill="var(--chibi-blush)" opacity="0.5"/>
       <!-- mouth -->
-      <ellipse cx="22" cy="27" rx="2.5" ry="2" fill="#e88"/>
+      <ellipse cx="22" cy="27" rx="2.5" ry="2" fill="var(--chibi-mouth)"/>
       <!-- body -->
-      <ellipse cx="22" cy="44" rx="12" ry="6" fill="#b8d4ff"/>
+      <ellipse cx="22" cy="44" rx="12" ry="6" fill="var(--chibi-hair2)"/>
       <!-- star -->
       <text x="34" y="6" font-size="10">⭐</text>
     </svg>
@@ -1030,44 +1036,44 @@
       <ellipse cx="65" cy="200" rx="38" ry="7" fill="rgba(200,150,180,0.18)"/>
       <path d="M38 158 Q34 172 32 186 L42 190 L65 192 L88 190 L98 186 Q96 172 92 158 Z" fill="url(#dG1)"/>
       <defs><linearGradient id="dG1" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ff85a8"/><stop offset="100%" stop-color="#ff5277"/>
+        <stop offset="0%" stop-color="var(--chibi-hair1d)"/><stop offset="100%" stop-color="var(--chibi-ribbon)"/>
       </linearGradient></defs>
-      <path d="M42 162 L65 192 L88 162" fill="none" stroke="#ffb8d0" stroke-width="1.2" opacity="0.6"/>
+      <path d="M42 162 L65 192 L88 162" fill="none" stroke="var(--chibi-hair1)" stroke-width="1.2" opacity="0.6"/>
       <circle cx="65" cy="158" r="4" fill="#fff"/>
-      <path d="M38 162 Q20 168 16 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <path d="M92 162 Q110 168 114 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <circle cx="16" cy="176" r="5" fill="#ffe0d0"/>
-      <circle cx="114" cy="176" r="5" fill="#ffe0d0"/>
-      <rect x="59" y="146" width="12" height="12" rx="4" fill="#ffe0d0"/>
-      <ellipse cx="65" cy="128" rx="27" ry="29" fill="#ffe0d0"/>
+      <path d="M38 162 Q20 168 16 176" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M92 162 Q110 168 114 176" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="16" cy="176" r="5" fill="var(--chibi-skin)"/>
+      <circle cx="114" cy="176" r="5" fill="var(--chibi-skin)"/>
+      <rect x="59" y="146" width="12" height="12" rx="4" fill="var(--chibi-skin)"/>
+      <ellipse cx="65" cy="128" rx="27" ry="29" fill="var(--chibi-skin)"/>
       <path d="M38 128 Q36 100 50 92 Q58 84 72 84 Q84 84 92 92 Q102 100 92 128 Q100 124 102 110 Q105 96 98 88 Q86 76 65 78 Q44 78 36 88 Q28 96 32 110 Q34 124 38 128 Z" fill="url(#hG1)"/>
       <defs><linearGradient id="hG1" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ffb8d0"/><stop offset="100%" stop-color="#ff7096"/>
+        <stop offset="0%" stop-color="var(--chibi-hair1)"/><stop offset="100%" stop-color="var(--chibi-hair1d)"/>
       </linearGradient></defs>
-      <path d="M38 116 Q48 98 65 96 Q82 98 92 116 Q88 106 80 102 Q65 98 50 102 Q42 106 38 116 Z" fill="#ff85a8"/>
+      <path d="M38 116 Q48 98 65 96 Q82 98 92 116 Q88 106 80 102 Q65 98 50 102 Q42 106 38 116 Z" fill="var(--chibi-hair1d)"/>
       <path d="M36 118 Q32 134 34 148 Q36 154 24 156 Q18 148 24 138 Q28 128 36 118 Z" fill="url(#hG1)" opacity="0.85"/>
       <path d="M94 118 Q98 134 96 148 Q94 154 106 156 Q112 148 106 138 Q102 128 94 118 Z" fill="url(#hG1)" opacity="0.85"/>
       <ellipse cx="55" cy="126" rx="7" ry="8.5" fill="#fff"/>
       <ellipse cx="75" cy="126" rx="7" ry="8.5" fill="#fff"/>
-      <ellipse cx="56" cy="127" rx="4.8" ry="5.8" fill="#4a3055"/>
-      <ellipse cx="76" cy="127" rx="4.8" ry="5.8" fill="#4a3055"/>
+      <ellipse cx="56" cy="127" rx="4.8" ry="5.8" fill="var(--chibi-eye)"/>
+      <ellipse cx="76" cy="127" rx="4.8" ry="5.8" fill="var(--chibi-eye)"/>
       <circle cx="53" cy="124" r="2.2" fill="#fff"/>
       <circle cx="73" cy="124" r="2.2" fill="#fff"/>
-      <ellipse cx="46" cy="136" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
-      <ellipse cx="84" cy="136" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
-      <path d="M58 140 Q65 146 72 140" fill="none" stroke="#d88" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M65 84 Q68 72 74 68" fill="none" stroke="#ff85a8" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="46" cy="136" rx="7" ry="4.5" fill="var(--chibi-blush)" opacity="0.4"/>
+      <ellipse cx="84" cy="136" rx="7" ry="4.5" fill="var(--chibi-blush)" opacity="0.4"/>
+      <path d="M58 140 Q65 146 72 140" fill="none" stroke="var(--chibi-mouth)" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M65 84 Q68 72 74 68" fill="none" stroke="var(--chibi-hair1d)" stroke-width="2" stroke-linecap="round"/>
       <text x="98" y="108" font-size="13">🎀</text>
       <!-- wand -->
       <g transform="translate(18, 168) rotate(-22)">
-        <rect x="0" y="-2" width="34" height="3.5" rx="1.5" fill="#f8d878"/>
-        <circle cx="36" cy="0" r="7" fill="#ffe066"/>
+        <rect x="0" y="-2" width="34" height="3.5" rx="1.5" fill="var(--chibi-ribbon)"/>
+        <circle cx="36" cy="0" r="7" fill="var(--chibi-ribbon)"/>
         <text x="36" y="2" font-size="12" text-anchor="middle">⭐</text>
       </g>
-      <path d="M48 190 Q44 200 42 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <path d="M82 190 Q86 200 88 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="#ff5277"/>
-      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="#ff5277"/>
+      <path d="M48 190 Q44 200 42 204" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M82 190 Q86 200 88 204" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="var(--chibi-ribbon)"/>
+      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="var(--chibi-ribbon)"/>
     </svg>
   </div>
 </div>
@@ -1078,33 +1084,33 @@
       <ellipse cx="65" cy="200" rx="38" ry="7" fill="rgba(200,150,180,0.18)"/>
       <path d="M38 158 Q34 172 32 186 L42 190 L65 192 L88 190 L98 186 Q96 172 92 158 Z" fill="url(#dG2)"/>
       <defs><linearGradient id="dG2" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#a8c8ff"/><stop offset="100%" stop-color="#6ba3ff"/>
+        <stop offset="0%" stop-color="var(--chibi-hair2m)"/><stop offset="100%" stop-color="var(--chibi-hair2m)"/>
       </linearGradient></defs>
       <circle cx="65" cy="158" r="4" fill="#fff"/>
-      <path d="M38 162 Q22 168 18 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <path d="M92 162 Q108 168 112 176" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <circle cx="18" cy="176" r="5" fill="#ffe0d0"/>
-      <circle cx="112" cy="176" r="5" fill="#ffe0d0"/>
-      <rect x="59" y="146" width="12" height="12" rx="4" fill="#ffe0d0"/>
-      <ellipse cx="65" cy="128" rx="27" ry="29" fill="#ffe0d0"/>
+      <path d="M38 162 Q22 168 18 176" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M92 162 Q108 168 112 176" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="18" cy="176" r="5" fill="var(--chibi-skin)"/>
+      <circle cx="112" cy="176" r="5" fill="var(--chibi-skin)"/>
+      <rect x="59" y="146" width="12" height="12" rx="4" fill="var(--chibi-skin)"/>
+      <ellipse cx="65" cy="128" rx="27" ry="29" fill="var(--chibi-skin)"/>
       <path d="M38 128 Q36 100 50 92 Q58 84 72 84 Q84 84 92 92 Q102 100 92 128 Q100 124 102 110 Q105 96 98 88 Q86 76 65 78 Q44 78 36 88 Q28 96 32 110 Q34 124 38 128 Z" fill="url(#hG2)"/>
       <defs><linearGradient id="hG2" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#b8d4ff"/><stop offset="100%" stop-color="#7eb8ff"/>
+        <stop offset="0%" stop-color="var(--chibi-hair2)"/><stop offset="100%" stop-color="var(--chibi-hair2d)"/>
       </linearGradient></defs>
       <!-- twin tails -->
       <path d="M38 118 Q24 122 18 138 Q14 150 16 158 Q14 152 18 142 Q24 130 38 122 Z" fill="url(#hG2)"/>
       <path d="M92 118 Q106 122 112 138 Q116 150 114 158 Q116 152 112 142 Q106 130 92 122 Z" fill="url(#hG2)"/>
-      <circle cx="16" cy="156" r="7" fill="#7eb8ff"/>
-      <circle cx="114" cy="156" r="7" fill="#7eb8ff"/>
-      <circle cx="22" cy="138" r="4" fill="#ff6b9d"/>
-      <circle cx="108" cy="138" r="4" fill="#ff6b9d"/>
-      <path d="M40 114 Q50 96 65 94 Q80 96 90 114 Q86 102 78 98 Q65 94 52 98 Q44 102 40 114 Z" fill="#7eb8ff"/>
+      <circle cx="16" cy="156" r="7" fill="var(--chibi-hair2d)"/>
+      <circle cx="114" cy="156" r="7" fill="var(--chibi-hair2d)"/>
+      <circle cx="22" cy="138" r="4" fill="var(--chibi-ribbon)"/>
+      <circle cx="108" cy="138" r="4" fill="var(--chibi-ribbon)"/>
+      <path d="M40 114 Q50 96 65 94 Q80 96 90 114 Q86 102 78 98 Q65 94 52 98 Q44 102 40 114 Z" fill="var(--chibi-hair2d)"/>
       <!-- happy eyes -->
-      <path d="M48 126 Q56 120 64 126" fill="none" stroke="#4a3055" stroke-width="2" stroke-linecap="round"/>
-      <path d="M66 126 Q74 120 82 126" fill="none" stroke="#4a3055" stroke-width="2" stroke-linecap="round"/>
-      <ellipse cx="46" cy="134" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
-      <ellipse cx="84" cy="134" rx="7" ry="4.5" fill="#ffb0b0" opacity="0.4"/>
-      <ellipse cx="65" cy="139" rx="3.5" ry="2.5" fill="#e88"/>
+      <path d="M48 126 Q56 120 64 126" fill="none" stroke="var(--chibi-eye)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M66 126 Q74 120 82 126" fill="none" stroke="var(--chibi-eye)" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="46" cy="134" rx="7" ry="4.5" fill="var(--chibi-blush)" opacity="0.4"/>
+      <ellipse cx="84" cy="134" rx="7" ry="4.5" fill="var(--chibi-blush)" opacity="0.4"/>
+      <ellipse cx="65" cy="139" rx="3.5" ry="2.5" fill="var(--chibi-mouth)"/>
       <text x="98" y="105" font-size="14">⭐</text>
       <!-- notebook -->
       <g transform="translate(14, 168) rotate(-8)">
@@ -1112,10 +1118,10 @@
         <line x1="2" y1="4" x2="14" y2="4" stroke="#ddd" stroke-width="0.5"/>
         <line x1="2" y1="7" x2="10" y2="7" stroke="#ddd" stroke-width="0.5"/>
       </g>
-      <path d="M48 190 Q44 200 42 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <path d="M82 190 Q86 200 88 204" fill="none" stroke="#ffe0d0" stroke-width="8" stroke-linecap="round"/>
-      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="#6ba3ff"/>
-      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="#6ba3ff"/>
+      <path d="M48 190 Q44 200 42 204" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M82 190 Q86 200 88 204" fill="none" stroke="var(--chibi-skin)" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="40" cy="206" rx="7" ry="4.5" fill="var(--chibi-hair2m)"/>
+      <ellipse cx="90" cy="206" rx="7" ry="4.5" fill="var(--chibi-hair2m)"/>
     </svg>
   </div>
 </div>
