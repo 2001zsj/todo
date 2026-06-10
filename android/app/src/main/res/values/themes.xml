@@ -10,12 +10,4 @@
         <item name="android:enforceNavigationBarContrast">false</item>
     </style>
 
-    <!-- 开屏主题（全屏沉浸） -->
-    <style name="Theme.MahoTodo.Splash" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_bg_gradient</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-    </style>
 </resources>
