@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="./icon-180.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
 <meta name="apple-mobile-web-app-title" content="魔法待办">
-<meta name="apple-mobile-web-app-status-bar-style" content="pink-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ff6b9d">
 <title>✨ 魔法待办</title>
 <style>
@@ -213,7 +213,7 @@
     .petal { --petal-size: 5px !important; }
     .moon-glow { font-size: 1.5rem; top: 4%; right: 6%; }
     .chibi-mini svg { width: 36px; height: 40px; }
-    .chibi-bar { height: 48px; padding: 3px 6px 0; }
+    .chibi-bar { height: 48px; padding: 3px 6px 0; padding-top: calc(3px + env(safe-area-inset-top, 0px)); }
     @keyframes sparkleFloat {
       0%, 100% { transform: translateY(0) scale(1); opacity: 0.25; }
       50%      { transform: translateY(-7px) scale(1.15); opacity: 0.6; }
@@ -241,6 +241,7 @@
     justify-content: space-between;
     align-items: flex-start;
     padding: 6px 14px 0;
+    padding-top: calc(6px + env(safe-area-inset-top, 0px));
     background: linear-gradient(to bottom, rgba(255,245,249,0.95) 60%, rgba(255,245,249,0) 100%);
   }
 

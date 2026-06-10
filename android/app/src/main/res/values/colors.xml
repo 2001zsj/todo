@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="pink">#ff6b9d</color>
+    <color name="pink_light">#ffb8d0</color>
+    <color name="purple">#c471ed</color>
+    <color name="purple_light">#e8b4f8</color>
+    <color name="bg_gradient_start">#fff5f9</color>
+    <color name="bg_gradient_end">#f8e8ff</color>
     <color name="white">#ffffff</color>
+    <color name="text_dark">#4a3055</color>
+    <color name="icon_bg">#ffe8f0</color>
 </resources>

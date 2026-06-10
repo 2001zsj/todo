@@ -4,12 +4,79 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- 魔法棒 -->
+
+    <!-- 清单纸片阴影 -->
+    <path
+        android:fillColor="#20000000"
+        android:pathData="M22,30 L90,30 A6,6 0 0,1 96,36 L96,90 A6,6 0 0,1 90,96 L22,96 A6,6 0 0,1 16,90 L16,36 A6,6 0 0,1 22,30 Z" />
+
+    <!-- 清单主体（白色） -->
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M20,28 L88,28 A6,6 0 0,1 94,34 L94,88 A6,6 0 0,1 88,94 L20,94 A6,6 0 0,1 14,88 L14,34 A6,6 0 0,1 20,28 Z" />
+
+    <!-- 清单顶部装饰条 -->
     <path
         android:fillColor="#ff6b9d"
-        android:pathData="M54,18 L58,32 L54,40 L50,32 Z" />
-    <!-- 星星 -->
+        android:pathData="M20,28 L88,28 A6,6 0 0,1 94,34 L94,40 L14,40 L14,34 A6,6 0 0,1 20,28 Z" />
+
+    <!-- 第1行 - 已完成勾选框（粉色实心圆） -->
     <path
-        android:fillColor="#ff85a8"
-        android:pathData="M54,60 L57,68 L65,68 L59,73 L61,81 L54,77 L47,81 L49,73 L43,68 L51,68 Z" />
+        android:fillColor="#ff6b9d"
+        android:pathData="M32,52 m-10,0 a10,10 0 1,1 20,0 a10,10 0 1,1 -20,0" />
+    <!-- 勾号 ✓ -->
+    <path
+        android:strokeColor="#ffffff"
+        android:strokeWidth="2.5"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M27,52 L31,56 L37,48" />
+    <!-- 事项文字条 -->
+    <path
+        android:fillColor="#4a3055"
+        android:pathData="M48,48 L68,48 A2,2 0 0,1 70,50 L70,54 A2,2 0 0,1 68,56 L48,56 A2,2 0 0,1 46,54 L46,50 A2,2 0 0,1 48,48 Z" />
+
+    <!-- 第2行 - 未完成勾选框（紫色半透明） -->
+    <path
+        android:fillColor="#c471ed"
+        android:fillAlpha="0.5"
+        android:pathData="M32,68 m-10,0 a10,10 0 1,1 20,0 a10,10 0 1,1 -20,0" />
+    <!-- 事项文字条 -->
+    <path
+        android:fillColor="#9b7ea8"
+        android:pathData="M48,64 L60,64 A2,2 0 0,1 62,66 L62,70 A2,2 0 0,1 60,72 L48,72 A2,2 0 0,1 46,70 L46,66 A2,2 0 0,1 48,64 Z" />
+
+    <!-- 第3行 - 未完成勾选框（更淡） -->
+    <path
+        android:fillColor="#e8b4f8"
+        android:fillAlpha="0.4"
+        android:pathData="M32,84 m-10,0 a10,10 0 1,1 20,0 a10,10 0 1,1 -20,0" />
+    <!-- 事项文字条 -->
+    <path
+        android:fillColor="#ccb8d8"
+        android:pathData="M48,80 L56,80 A2,2 0 0,1 58,82 L58,86 A2,2 0 0,1 56,88 L48,88 A2,2 0 0,1 46,86 L46,82 A2,2 0 0,1 48,80 Z" />
+
+    <!-- 魔法星星（顶部中央） -->
+    <path
+        android:fillColor="#ffc107"
+        android:pathData="M54,10 L56.5,18 L65,18 L58,23.5 L60.5,32 L54,26.5 L47.5,32 L50,23.5 L43,18 L51.5,18 Z" />
+
+    <!-- 左下小星星 -->
+    <path
+        android:fillColor="#ffc107"
+        android:fillAlpha="0.7"
+        android:pathData="M22,78 L23,82 L27,82 L24,84 L25,88 L22,86 L19,88 L20,84 L17,82 L21,82 Z" />
+
+    <!-- 右上亮点 -->
+    <path
+        android:fillColor="#ffe066"
+        android:fillAlpha="0.6"
+        android:pathData="M84,24 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0" />
+
+    <!-- 右上小亮点 -->
+    <path
+        android:fillColor="#c471ed"
+        android:fillAlpha="0.4"
+        android:pathData="M92,38 m-2,0 a2,2 0 1,1 4,0 a2,2 0 1,1 -4,0" />
 </vector>
