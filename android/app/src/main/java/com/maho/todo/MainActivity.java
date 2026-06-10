@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -131,21 +130,29 @@ public class MainActivity extends Activity {
     private void showWebView() {
         if (splashView == null) return;
 
-        splashView.animate()
-                .alpha(0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        splashView.setVisibility(View.GONE);
-                        splashView = null;
-                    }
-                });
-
+        // 先让 WebView 显示出来，等一帧渲染完再做交叉淡入淡出
         webView.setAlpha(0f);
         webView.setVisibility(View.VISIBLE);
-        webView.animate().alpha(1f).setDuration(400).start();
-        webView.setBackgroundColor(0xFFFFFFFF);
+
+        webView.postDelayed(() -> {
+            if (splashView == null) return;
+
+            splashView.animate()
+                    .alpha(0f)
+                    .setDuration(350)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            splashView.setVisibility(View.GONE);
+                            splashView = null;
+                        }
+                    });
+
+            webView.animate()
+                    .alpha(1f)
+                    .setDuration(350)
+                    .start();
+        }, 80); // 等 80ms 让 WebView 先画一帧
     }
 
     @Override
