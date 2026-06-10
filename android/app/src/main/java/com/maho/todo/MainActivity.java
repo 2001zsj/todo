@@ -2,12 +2,10 @@ package com.maho.todo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.WindowInsetsController;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 public class MainActivity extends Activity {
@@ -25,6 +23,7 @@ public class MainActivity extends Activity {
         controller.setAppearanceLightStatusBars(true);
 
         webView = new WebView(this);
+        webView.setBackgroundColor(0xFFFFF5F9); // 粉色背景，加载时不会黑屏
         setContentView(webView);
 
         WebSettings settings = webView.getSettings();
@@ -33,14 +32,21 @@ public class MainActivity extends Activity {
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(false);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        // AppCache 已在 API 34 移除，PWA 改用 Service Worker
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                // PWA theme-color 适配状态栏
-                // 状态栏颜色由 styles.xml 控制
+                // 页面加载完成后设置白色背景
+                view.setBackgroundColor(0xFFFFFFFF);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode,
+                    String description, String failingUrl) {
+                // 加载失败显示粉色背景，避免黑屏
+                view.setBackgroundColor(0xFFFFF5F9);
+                view.loadUrl("about:blank");
             }
         });
 
