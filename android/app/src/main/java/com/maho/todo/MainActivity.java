@@ -20,7 +20,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
 public class MainActivity extends Activity {
     private static final String APP_URL = "https://2001zsj.github.io/todo/";
-    private static final int MIN_SPLASH_MS = 1800; // 最少展示1.8秒
+    private static final int MIN_SPLASH_MS = 2800; // 最少展示2.8秒
     private WebView webView;
     private View splashView;
     private boolean pageReady = false;
