@@ -213,7 +213,7 @@
     .petal { --petal-size: 5px !important; }
     .moon-glow { font-size: 1.5rem; top: 4%; right: 6%; }
     .chibi-mini svg { width: 36px; height: 40px; }
-    .chibi-bar { height: 48px; padding: 3px 6px 0; padding-top: calc(3px + env(safe-area-inset-top, 0px)); }
+    .chibi-bar { height: 48px; padding: 3px 6px 0; padding-top: calc(3px + env(safe-area-inset-top, 24px)); }
     @keyframes sparkleFloat {
       0%, 100% { transform: translateY(0) scale(1); opacity: 0.25; }
       50%      { transform: translateY(-7px) scale(1.15); opacity: 0.6; }
@@ -241,7 +241,7 @@
     justify-content: space-between;
     align-items: flex-start;
     padding: 6px 14px 0;
-    padding-top: calc(6px + env(safe-area-inset-top, 0px));
+    padding-top: calc(6px + env(safe-area-inset-top, 24px));
     background: linear-gradient(to bottom, rgba(255,245,249,0.95) 60%, rgba(255,245,249,0) 100%);
   }
 
