@@ -20,8 +20,12 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
 public class MainActivity extends Activity {
     private static final String APP_URL = "https://2001zsj.github.io/todo/";
+    private static final int MIN_SPLASH_MS = 1800; // 最少展示1.8秒
     private WebView webView;
     private View splashView;
+    private boolean pageReady = false;
+    private boolean splashDone = false;
+    private android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,8 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 view.setBackgroundColor(0xFFFFFFFF);
-                showWebView();
+                pageReady = true;
+                tryShowWebView();
             }
 
             @Override
@@ -66,7 +71,8 @@ public class MainActivity extends Activity {
                     String description, String failingUrl) {
                 view.setBackgroundColor(0xFFFFF5F9);
                 view.loadUrl("about:blank");
-                showWebView(); // 出错也过渡，避免永远卡在 splash
+                pageReady = true;
+                tryShowWebView();
             }
         });
 
@@ -81,8 +87,20 @@ public class MainActivity extends Activity {
         // ── 播放 splash 动画 ──
         playSplashAnimation();
 
+        // ── 设定最短展示时间 ──
+        handler.postDelayed(() -> {
+            splashDone = true;
+            tryShowWebView();
+        }, MIN_SPLASH_MS);
+
         // ── 后台开始加载 ──
         webView.loadUrl(APP_URL);
+    }
+
+    private void tryShowWebView() {
+        if (pageReady && splashDone) {
+            showWebView();
+        }
     }
 
     private void playSplashAnimation() {
