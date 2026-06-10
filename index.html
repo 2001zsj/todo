@@ -407,6 +407,42 @@
     box-shadow: 0 2px 10px rgba(196,113,237,0.25);
   }
 
+  /* ── Category selector ── */
+  .cat-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cat-btn {
+    width: 40px; height: 40px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+  }
+
+  .cat-btn.active {
+    border-color: var(--pink);
+    background: #fff0f5;
+    transform: scale(1.1);
+    box-shadow: 0 2px 12px rgba(255,107,157,0.3);
+  }
+
+  .cat-btn:active {
+    transform: scale(0.92);
+  }
+
   /* ── Stats bar ── */
   .stats-bar {
     display: flex;
@@ -502,6 +538,15 @@
   .todo-item > *:not(.swipe-bg) {
     position: relative;
     z-index: 1;
+  }
+
+  /* category icon */
+  .todo-cat {
+    flex-shrink: 0;
+    font-size: 1.15rem;
+    cursor: pointer;
+    width: 24px;
+    text-align: center;
   }
 
   /* checkbox */
@@ -1017,6 +1062,15 @@
     <button id="addBtn">✨ 添加</button>
   </div>
 
+  <div class="cat-row" id="catRow">
+    <button class="cat-btn active" data-cat="">📋</button>
+    <button class="cat-btn" data-cat="work">💼</button>
+    <button class="cat-btn" data-cat="life">🏠</button>
+    <button class="cat-btn" data-cat="study">📖</button>
+    <button class="cat-btn" data-cat="health">❤️</button>
+    <button class="cat-btn" data-cat="shop">🛒</button>
+  </div>
+
   <div class="filters">
     <button class="active" data-filter="all">🌸 全部</button>
     <button data-filter="active">📋 待办</button>
@@ -1053,8 +1107,13 @@
   const KEY = 'maho_todo';
   let todos = [];
   let filter = 'all';
+  let cat = '';
   let editingId = null;
   let toastTimer = null;
+
+  /* ─── Category icons ─── */
+  const CAT_ICONS = { '': '📋', work: '💼', life: '🏠', study: '📖', health: '❤️', shop: '🛒' };
+  const catBtns = document.querySelectorAll('.cat-btn');
 
   /* ─── Storage ─── */
   function save() { try { localStorage.setItem(KEY, JSON.stringify(todos)); } catch(e) {} }
@@ -1222,11 +1281,22 @@
         contentEl.value = t.text;
         contentEl.dataset.action = 'editInput';
 
+        const catIconEdit = document.createElement('span');
+        catIconEdit.className = 'todo-cat';
+        catIconEdit.textContent = CAT_ICONS[t.cat] || '';
+
         li.appendChild(swipeBg);
+        li.appendChild(catIconEdit);
         li.appendChild(cb);
         li.appendChild(contentEl);
         li.appendChild(delBtn);
       } else {
+        // category icon
+        const catIcon = document.createElement('span');
+        catIcon.className = 'todo-cat';
+        catIcon.textContent = CAT_ICONS[t.cat] || '';
+        catIcon.dataset.action = 'edit';
+
         // text wrapper
         const textWrap = document.createElement('div');
         textWrap.style.cssText = 'flex:1;min-width:0;';
@@ -1246,6 +1316,7 @@
         }
 
         li.appendChild(swipeBg);
+        li.appendChild(catIcon);
         li.appendChild(cb);
         li.appendChild(textWrap);
         li.appendChild(delBtn);
@@ -1270,7 +1341,7 @@
   function add(text) {
     const trimmed = text.trim();
     if (!trimmed) return;
-    todos.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text: trimmed, done: false, completedAt: null });
+    todos.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text: trimmed, cat, done: false, completedAt: null });
     save(); render();
     input.value = '';
     input.focus();
@@ -1428,6 +1499,12 @@
 
   /* ─── Filters ─── */
   filterBtns.forEach(b => b.addEventListener('click', () => setFilter(b.dataset.filter)));
+
+  /* ─── Category ─── */
+  catBtns.forEach(b => b.addEventListener('click', () => {
+    cat = b.dataset.cat;
+    catBtns.forEach(x => x.classList.toggle('active', x.dataset.cat === cat));
+  }));
 
   /* ─── Date ─── */
   (function updateDate() {
