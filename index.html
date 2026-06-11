@@ -765,6 +765,7 @@
   .toast.visible {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
   }
 
   /* ══════════════════════════════════════
@@ -1520,14 +1521,36 @@
     if (todo.done) toast('✅ 任务完成！');
   }
 
+  let undoData = null, undoTimer = null;
+
   function remove(id) {
     const idx = todos.findIndex(t => t.id === id);
     if (idx === -1) return;
     const wasEditing = editingId === id;
+    // 保存快照以便撤销
+    undoData = { item: { ...todos[idx] }, index: idx };
     todos.splice(idx, 1);
     if (wasEditing) editingId = null;
     save(); render();
-    toast('已删除');
+    showUndoToast(id);
+  }
+
+  function undo(id) {
+    if (!undoData) return;
+    todos.splice(undoData.index, 0, undoData.item);
+    undoData = null;
+    if (undoTimer) clearTimeout(undoTimer);
+    save(); render();
+    toast('已恢复 ✅');
+  }
+
+  function showUndoToast(id) {
+    if (undoTimer) clearTimeout(undoTimer);
+    const el = document.getElementById('toast');
+    el.innerHTML = '已删除 <button id="undoBtn" style="margin-left:8px;padding:4px 12px;border-radius:12px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;font-size:0.85rem">撤销</button>';
+    el.classList.add('visible');
+    document.getElementById('undoBtn').onclick = () => { undo(id); el.classList.remove('visible'); };
+    undoTimer = setTimeout(() => { undoData = null; el.classList.remove('visible'); }, 4000);
   }
 
   function startEdit(id) {
@@ -1557,6 +1580,7 @@
   function setFilter(f) {
     filter = f;
     editingId = null;
+    undoData = null;
     filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === f));
     render();
   }
