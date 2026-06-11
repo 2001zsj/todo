@@ -1594,21 +1594,17 @@
 
   container.addEventListener('touchend', e => {
     if (!swipeTarget) return;
-    document.querySelectorAll('.swipe-bg.show').forEach(b => { b.classList.remove('show'); b.style.width = ''; });
     const target = swipeTarget;
     const id = target.dataset.id;
     const dx = swipeDx;
     swipeTarget = null;
     swipeDx = 0;
+    document.querySelectorAll('.swipe-bg.show').forEach(b => { b.classList.remove('show'); b.style.width = ''; });
     if (dx < -40 && id) {
       target.style.transition = 'all 0.2s ease';
       target.style.transform = 'translateX(-120px)';
       target.style.opacity = '0';
-      // 用transitionend或兜底250ms后删除
-      let done = false;
-      const doRemove = () => { if (!done) { done = true; remove(id); } };
-      target.addEventListener('transitionend', doRemove, { once: true });
-      setTimeout(doRemove, 300);
+      remove(id);
     } else {
       target.style.transition = 'all 0.25s ease';
       target.style.transform = '';
