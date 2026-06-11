@@ -442,42 +442,23 @@
     box-shadow: 0 2px 10px rgba(196,113,237,0.25);
   }
 
-  /* ── Category selector ── */
-  .cat-row {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .cat-btn {
-    width: 40px; height: 40px;
-    border: 2px solid transparent;
-    border-radius: 50%;
-    background: var(--card);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
-  }
-
-  .cat-btn.active {
-    border-color: var(--pink);
-    background: #fff0f5;
-    transform: scale(1.1);
-    box-shadow: 0 2px 12px rgba(255,107,157,0.3);
-  }
-
-  .cat-btn:active {
-    transform: scale(0.92);
-  }
-
+	  /* ── Category selector ── */
+	  .cat-row { display:flex; gap:10px; margin-bottom:12px; justify-content:center; flex-wrap:wrap; }
+	  .cat-btn {
+	    width:44px; height:44px; border:2px solid transparent; border-radius:50%;
+	    background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+	    cursor:pointer; transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+	    display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); padding:9px;
+	  }
+	  .cat-btn svg { width:20px; height:20px; transition:all 0.25s ease; }
+	  .cat-btn.active {
+	    border-color:var(--pink); background:linear-gradient(135deg, var(--pink-light), #fff0f5);
+	    transform:scale(1.12); box-shadow:0 4px 16px rgba(255,107,157,0.25);
+	  }
+	  .cat-btn.active svg { transform:scale(1.1); }
+	  .cat-btn:hover { transform:scale(1.05); }
+	  .cat-btn.active:hover { transform:scale(1.12); }
+	  .cat-btn:active { transform:scale(0.92); }
   /* ── Stats bar ── */
   .stats-bar {
     display: flex;
@@ -585,9 +566,11 @@
     flex-shrink: 0;
     font-size: 1.15rem;
     cursor: pointer;
-    width: 24px;
-    text-align: center;
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2);
   }
+  .todo-cat svg { width: 16px; height: 16px; }
 
   /* checkbox */
   .checkbox {
@@ -1127,12 +1110,12 @@
   </div>
 
   <div class="cat-row" id="catRow">
-    <button class="cat-btn active" data-cat="">📋</button>
-    <button class="cat-btn" data-cat="work">💼</button>
-    <button class="cat-btn" data-cat="life">🏠</button>
-    <button class="cat-btn" data-cat="study">📖</button>
-    <button class="cat-btn" data-cat="health">❤️</button>
-    <button class="cat-btn" data-cat="shop">🛒</button>
+    <button class="cat-btn active" data-cat="" title="全部"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+    <button class="cat-btn" data-cat="work" title="工作"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+    <button class="cat-btn" data-cat="life" title="生活"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10L12 3l9 7v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9z"/><path d="M9 21V12h6v9"/></svg></button>
+    <button class="cat-btn" data-cat="study" title="学习"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16v14H4z"/><path d="M6 3h12v3H6z"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg></button>
+    <button class="cat-btn" data-cat="health" title="健康"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z"/></svg></button>
+    <button class="cat-btn" data-cat="shop" title="购物"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/><path d="M1 1h3.5L7 4h16l-3 10H7L4 4H1z"/></svg></button>
   </div>
 
   <div class="filters">
@@ -1180,7 +1163,14 @@
   let toastTimer = null;
 
   /* ─── Category icons ─── */
-  const CAT_ICONS = { '': '📋', work: '💼', life: '🏠', study: '📖', health: '❤️', shop: '🛒' };
+  const CAT_ICONS = {
+    '': '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    work: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>',
+    life: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10L12 3l9 7v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9z"/><path d="M9 21V12h6v9"/></svg>',
+    study: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16v14H4z"/><path d="M6 3h12v3H6z"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>',
+    health: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z"/></svg>',
+    shop: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/><path d="M1 1h3.5L7 4h16l-3 10H7L4 4H1z"/></svg>'
+  };
   const catBtns = document.querySelectorAll('.cat-btn');
 
   /* ─── Storage ─── */
@@ -1442,7 +1432,7 @@
 
         const catIconEdit = document.createElement('span');
         catIconEdit.className = 'todo-cat';
-        catIconEdit.textContent = CAT_ICONS[t.cat] || '';
+        catIconEdit.innerHTML = CAT_ICONS[t.cat] || '';
 
         li.appendChild(swipeBg);
         li.appendChild(catIconEdit);
@@ -1453,7 +1443,7 @@
         // category icon
         const catIcon = document.createElement('span');
         catIcon.className = 'todo-cat';
-        catIcon.textContent = CAT_ICONS[t.cat] || '';
+        catIcon.innerHTML = CAT_ICONS[t.cat] || '';
         catIcon.dataset.action = 'edit';
 
         // text wrapper
