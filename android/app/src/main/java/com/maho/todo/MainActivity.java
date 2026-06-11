@@ -30,10 +30,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        WindowInsetsControllerCompat controller =
-                new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
-        controller.setAppearanceLightStatusBars(true);
+        getWindow().setStatusBarColor(0xFFFFF5F9);
 
         // ── 根布局 FrameLayout ──
         FrameLayout root = new FrameLayout(this);
