@@ -1604,12 +1604,11 @@
       target.style.transition = 'all 0.2s ease';
       target.style.transform = 'translateX(-120px)';
       target.style.opacity = '0';
-      const fallback = setTimeout(() => remove(id), 400);
-      target.addEventListener('transitionend', function handler() {
-        target.removeEventListener('transitionend', handler);
-        clearTimeout(fallback);
-        remove(id);
-      });
+      // 用transitionend或兜底250ms后删除
+      let done = false;
+      const doRemove = () => { if (!done) { done = true; remove(id); } };
+      target.addEventListener('transitionend', doRemove, { once: true });
+      setTimeout(doRemove, 300);
     } else {
       target.style.transition = 'all 0.25s ease';
       target.style.transform = '';
