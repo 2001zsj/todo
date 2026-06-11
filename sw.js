@@ -1,8 +1,9 @@
 /* ─── 魔法待办 Service Worker ─── */
-const CACHE_NAME = 'maho-todo-v16';
+const CACHE_NAME = 'maho-todo-v17';
 const ASSETS = [
   './',
   './index.html',
+  './manifest.json',
   './icon.svg',
   './icon-192.png',
   './icon-180.png',
