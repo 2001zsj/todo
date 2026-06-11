@@ -1,5 +1,5 @@
 /* ─── 魔法待办 Service Worker ─── */
-const CACHE_NAME = 'maho-todo-v17';
+const CACHE_NAME = 'maho-todo-v18';
 const ASSETS = [
   './',
   './index.html',
