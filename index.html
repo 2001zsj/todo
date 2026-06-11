@@ -1595,25 +1595,25 @@
   container.addEventListener('touchend', e => {
     if (!swipeTarget) return;
     document.querySelectorAll('.swipe-bg.show').forEach(b => { b.classList.remove('show'); b.style.width = ''; });
-    const id = swipeTarget.dataset.id;
-    if (swipeDx < -40 && id) {
-      // swipe far enough → delete
-      swipeTarget.style.transition = 'all 0.2s ease';
-      swipeTarget.style.transform = 'translateX(-120px)';
-      swipeTarget.style.opacity = '0';
-      const fallback = setTimeout(() => { if (swipeTarget) remove(id); }, 400);
-      swipeTarget.addEventListener('transitionend', function handler() {
-        swipeTarget.removeEventListener('transitionend', handler);
+    const target = swipeTarget;
+    const id = target.dataset.id;
+    const dx = swipeDx;
+    swipeTarget = null;
+    swipeDx = 0;
+    if (dx < -40 && id) {
+      target.style.transition = 'all 0.2s ease';
+      target.style.transform = 'translateX(-120px)';
+      target.style.opacity = '0';
+      const fallback = setTimeout(() => remove(id), 400);
+      target.addEventListener('transitionend', function handler() {
+        target.removeEventListener('transitionend', handler);
         clearTimeout(fallback);
         remove(id);
       });
     } else {
-      // spring back
-      swipeTarget.style.transition = 'all 0.25s ease';
-      swipeTarget.style.transform = '';
+      target.style.transition = 'all 0.25s ease';
+      target.style.transform = '';
     }
-    swipeTarget = null;
-    swipeDx = 0;
   });
 
   /* ─── Click delegation ─── */
