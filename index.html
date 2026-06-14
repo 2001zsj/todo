@@ -195,6 +195,7 @@
     animation: sparkleFloat 3.5s ease-in-out infinite;
     font-size: 1rem;
     opacity: 0.45;
+    will-change: transform, opacity;
   }
   .sparkle:nth-child(1)  { top: 3%;  left: 6%;  animation-delay: 0s;    animation-duration: 3.2s; font-size: 0.9rem; }
   .sparkle:nth-child(2)  { top: 6%;  left: 85%; animation-delay: 0.6s;  animation-duration: 2.8s; font-size: 1.1rem; }
@@ -491,6 +492,8 @@
   }
 
   .stats-bar button:active { background: #fff0f5; }
+  .stats-bar .backup-btn { border:1px solid var(--border); color:var(--text2); margin-left:4px; padding:5px 8px; font-size:0.68rem; }
+  .stats-bar .backup-btn:active { background:var(--border); }
 
   /* ── Todo List ── */
   .todo-list {
@@ -1072,7 +1075,7 @@
 <!-- ══════════════════════════════════════
      Toast
      ══════════════════════════════════════ -->
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- ══════════════════════════════════════
      Theme switch
@@ -1088,7 +1091,7 @@
 <!-- ══════════════════════════════════════
      Main
      ══════════════════════════════════════ -->
-<div class="app">
+<div class="app" role="main" aria-label="魔法待办清单">
 
   <!-- PWA install banner -->
   <div class="install-banner hidden" id="installBanner">
@@ -1105,8 +1108,8 @@
   </header>
 
   <div class="input-row">
-    <input type="text" id="todoInput" placeholder="写下今天要做的事吧～" maxlength="150" autocomplete="off">
-    <button id="addBtn">✨ 添加</button>
+    <input type="text" id="todoInput" placeholder="写下今天要做的事吧～" maxlength="150" autocomplete="off" aria-label="新任务内容">
+    <button id="addBtn" aria-label="添加任务">✨ 添加</button>
   </div>
 
   <div class="cat-row" id="catRow">
@@ -1126,8 +1129,13 @@
 
   <div class="stats-bar">
     <span class="count" id="statsText">共 0 条</span>
-    <button id="clearDoneBtn">🧹 清除已完成</button>
+    <div style="display:flex;gap:3px;align-items:center;">
+      <button class="backup-btn" id="exportBtn" title="导出备份">💾 导出</button>
+      <button class="backup-btn" id="importBtn" title="导入恢复">📂 导入</button>
+      <button id="clearDoneBtn">🧹 清除已完成</button>
+    </div>
   </div>
+  <input type="file" id="importFileInput" accept=".json" style="display:none">
 
   <div id="todoContainer" style="flex:1; display:flex; flex-direction:column;">
     <!-- list or empty state rendered here -->
@@ -1327,23 +1335,38 @@
     updateChibis(theme);
   }
 
-  /* ─── 动态流星 ─── */
+  /* ─── 动态流星（性能优化版）─── */
+  let shootingId = null;
   function spawnShootingStar() {
     const sf = document.getElementById('starfield');
     if (!sf) return;
+    // 限制同时最多 3 颗流星
+    if (sf.querySelectorAll('.shooting').length >= 3) return;
     const star = document.createElement('div');
     star.className = 'shooting';
-    const top = Math.random() * 60 + 5; // 5%-65% from top
-    const left = Math.random() * 70; // 0%-70% from left
-    const len = Math.random() * 50 + 40; // 40-90px length
-    star.style.cssText = `top:${top}%;left:${left}%;width:${len}px;animation-duration:${Math.random()*1.2+1.2}s;animation-delay:0s`;
+    const top = Math.random() * 60 + 5;
+    const left = Math.random() * 70;
+    const len = Math.random() * 50 + 40;
+    // 使用 will-change 提示浏览器优化
+    star.style.cssText = `top:${top}%;left:${left}%;width:${len}px;animation-duration:${Math.random()*1.2+1.2}s;animation-delay:0s;will-change:transform,opacity`;
     sf.appendChild(star);
-    star.addEventListener('animationend', () => star.remove());
+    star.addEventListener('animationend', () => { if (star.parentNode) star.remove(); });
   }
   function scheduleShootingStar() {
-    const delay = Math.random() * 8000 + 4000; // 4-12s random interval
-    setTimeout(() => { spawnShootingStar(); scheduleShootingStar(); }, delay);
+    // 非暗夜主题降低频率（省电）
+    const isDark = document.body.classList.contains('theme-dark');
+    const base = isDark ? 4000 : 12000;
+    const range = isDark ? 6000 : 20000;
+    const delay = Math.random() * range + base;
+    shootingId = setTimeout(() => { spawnShootingStar(); scheduleShootingStar(); }, delay);
   }
+  // 主题切换时调整流星频率
+  const origSetTheme = setTheme;
+  setTheme = function(name) {
+    if (shootingId) clearTimeout(shootingId);
+    origSetTheme(name);
+    scheduleShootingStar();
+  };
   scheduleShootingStar();
 
   function setTheme(name) {
@@ -1400,11 +1423,14 @@
 
     const ul = document.createElement('ul');
     ul.className = 'todo-list';
+    ul.setAttribute('role', 'list');
+    ul.setAttribute('aria-label', filter === 'completed' ? '已完成任务列表' : filter === 'active' ? '待办任务列表' : '全部任务列表');
 
     items.forEach(t => {
       const li = document.createElement('li');
       li.className = 'todo-item' + (t.done ? ' completed' : '');
       li.dataset.id = t.id;
+      li.setAttribute('role', 'listitem');
 
       // swipe bg
       const swipeBg = document.createElement('div');
@@ -1415,6 +1441,10 @@
       const cb = document.createElement('div');
       cb.className = 'checkbox';
       cb.dataset.action = 'toggle';
+      cb.setAttribute('role', 'checkbox');
+      cb.setAttribute('aria-checked', t.done ? 'true' : 'false');
+      cb.setAttribute('aria-label', (t.done ? '标记未完成: ' : '标记完成: ') + t.text);
+      cb.setAttribute('tabindex', '0');
 
       // delete btn
       const delBtn = document.createElement('button');
@@ -1567,6 +1597,64 @@
     toast(`清除了 ${before - todos.length} 条 🧹`);
   }
 
+  /* ─── Export / Import backup ─── */
+  function exportData() {
+    if (todos.length === 0) { toast('没有数据可以导出哦～'); return; }
+    const data = JSON.stringify({ version: 2, exportedAt: new Date().toISOString(), todos }, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
+    a.download = `魔法待办备份_${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('✅ 导出成功！');
+  }
+
+  function importData(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        let imported = [];
+        if (Array.isArray(data)) {
+          imported = data;
+        } else if (data.todos && Array.isArray(data.todos)) {
+          imported = data.todos;
+        } else {
+          toast('❌ 无法识别的备份格式');
+          return;
+        }
+        // 验证数据有效性
+        imported = imported.filter(t => t && typeof t.id === 'string' && t.text && t.text.trim());
+        if (imported.length === 0) { toast('❌ 备份文件中没有有效任务'); return; }
+        // 询问合并还是覆盖（通过 toast 按钮）
+        const el = document.getElementById('toast');
+        el.innerHTML = `找到 ${imported.length} 条任务 · <button id="importMerge" style="margin:0 4px;padding:4px 10px;border-radius:10px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;font-size:0.8rem">合并导入</button> <button id="importOverwrite" style="margin:0 4px;padding:4px 10px;border-radius:10px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;font-size:0.8rem">覆盖现有</button>`;
+        el.classList.add('visible');
+        document.getElementById('importMerge').onclick = () => {
+          // 按 text 去重合并
+          imported.forEach(item => {
+            if (!todos.some(t => t.text === item.text)) todos.push(item);
+          });
+          save(); render(); el.classList.remove('visible'); toast('✅ 导入完成！');
+        };
+        document.getElementById('importOverwrite').onclick = () => {
+          todos = imported;
+          editingId = null;
+          save(); render(); el.classList.remove('visible'); toast('✅ 已覆盖导入！');
+        };
+        setTimeout(() => { if (el.classList.contains('visible') && el.querySelector('#importMerge')) el.classList.remove('visible'); }, 8000);
+      } catch(err) {
+        toast('❌ 文件解析失败，请检查备份文件');
+      }
+    };
+    reader.readAsText(file);
+  }
+
   function setFilter(f) {
     filter = f;
     editingId = null;
@@ -1639,6 +1727,14 @@
     if (action === 'edit')    startEdit(id);
   });
 
+  /* ─── Keyboard: checkbox Enter/Space ─── */
+  container.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const cb = e.target.closest('[data-action="toggle"]');
+      if (cb) { e.preventDefault(); e.target.click(); }
+    }
+  });
+
   /* ─── Double-click to edit ─── */
   container.addEventListener('dblclick', e => {
     const textEl = e.target.closest('.todo-text');
@@ -1672,6 +1768,15 @@
   /* ─── Clear done ─── */
   clearBtn.addEventListener('click', clearDone);
 
+  /* ─── Export / Import ─── */
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+  document.getElementById('importBtn').addEventListener('click', () => {
+    document.getElementById('importFileInput').click();
+  });
+  document.getElementById('importFileInput').addEventListener('change', e => {
+    if (e.target.files.length > 0) { importData(e.target.files[0]); e.target.value = ''; }
+  });
+
   /* ─── Filters ─── */
   filterBtns.forEach(b => b.addEventListener('click', () => setFilter(b.dataset.filter)));
 
@@ -1692,11 +1797,29 @@
   /* ─── PWA: Service Worker ─── */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=18').then(reg => {
-        // SW registered
-      }).catch(err => {
-        // SW failed
-      });
+      navigator.serviceWorker.register('./sw.js?v=20').then(reg => {
+        // 检测 SW 更新
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          let refreshing = false;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // 新版本已安装，通知用户刷新
+              if (!refreshing) {
+                refreshing = true;
+                const el = document.getElementById('toast');
+                el.innerHTML = '🔄 有新版本 · <button id="swUpdateBtn" style="margin-left:4px;padding:4px 12px;border-radius:12px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;font-size:0.85rem">立即更新</button>';
+                el.classList.add('visible');
+                document.getElementById('swUpdateBtn').onclick = () => {
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  window.location.reload();
+                };
+                setTimeout(() => { el.classList.remove('visible'); }, 8000);
+              }
+            }
+          });
+        });
+      }).catch(() => {});
     });
   }
 
