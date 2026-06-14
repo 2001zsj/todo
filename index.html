@@ -181,11 +181,11 @@
     transition: background 0.5s ease, color 0.4s ease;
   }
 
-  /* 主题平滑过渡 */
+  /* 主题过渡 */
   .todo-item, .filters, .input-row input,
   .cat-btn, .theme-switch button, .stats-bar .count,
   .install-banner {
-    transition: all 0.3s ease, background 0.5s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    transition: all 0.3s ease, background 0.5s ease, color 0.4s ease, border-color 0.4s ease;
   }
 
   /* ══════════════════════════════════════
@@ -391,7 +391,6 @@
   .input-row input:focus {
     border-color: #c471ed;
     box-shadow: 0 0 0 4px rgba(196,113,237,0.1);
-    transform: scale(1.005);
   }
 
   .input-row input::placeholder { color: var(--placeholder); }
@@ -716,7 +715,7 @@
   }
   .todo-item.popping { animation: popIn 0.35s ease; }
 
-  /* checkbox check pop */
+  /* checkPop */
   @keyframes checkPop {
     0%   { transform: scale(1); }
     50%  { transform: scale(1.2); }
@@ -916,10 +915,7 @@
     border-color: transparent;
     box-shadow: 0 2px 12px rgba(196,113,237,0.3);
   }
-  .theme-switch button:not(.active):hover {
-    background: rgba(255,255,255,0.5);
-    transform: scale(1.05);
-  }
+  .theme-switch button:not(.active):hover { background: rgba(255,255,255,0.5); transform: scale(1.05); }
   .theme-switch button:active { transform: scale(0.92); }
 
   /* 手机窄屏：只显示 emoji，隐藏文字 */
@@ -1903,4 +1899,7 @@
 
   // 如果在独立模式中，不显示横幅
   if (isStandalone) {
-    installBanner.
+    installBanner.classList.add('hidden');
+  }
+
+  // 如果是不支持 beforeinstallprompt 且
