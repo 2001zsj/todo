@@ -1903,28 +1903,4 @@
 
   // 如果在独立模式中，不显示横幅
   if (isStandalone) {
-    installBanner.classList.add('hidden');
-  }
-
-  // 如果是不支持 beforeinstallprompt 且不是独立模式的 iOS，3秒后显示引导
-  if (!isStandalone && /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
-    setTimeout(() => {
-      if (!deferredPrompt) {
-        installBanner.classList.remove('hidden');
-        installBanner.querySelector('.banner-text').innerHTML =
-          '<strong>添加到主屏幕</strong><br>像 App 一样快速打开';
-        installBtn.textContent = '📘 教程';
-      }
-    }, 3000);
-  }
-
-  /* ─── Init ─── */
-  migrateData(); // 合并旧版本数据（仅执行一次）
-  todos = load();
-  migrate(); // 给老数据补上完成时间
-  render();
-  input.focus();
-})();
-</script>
-</body>
-</html>
+    installBanner.
